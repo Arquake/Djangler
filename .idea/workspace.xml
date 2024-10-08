@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0dda0dc0-3108-4ff4-aeba-c4b3b6ca3caf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Commands/CreateApp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Commands/Serve.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/template-files/BareboneBaseTemplate.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/template-files/BareboneBaseUrls.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/template-files/BareboneTemplate.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/template-files/BareboneViews.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/custom-cli.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/ComponentGenerator.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/ComponentGenerator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/Help.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/Help.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/file-generator/createController.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-logs/ConsoleLogs.js" beforeDir="false" afterPath="$PROJECT_DIR$/console-logs/ConsoleLogs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template-files/BareboneController.txt" beforeDir="false" afterPath="$PROJECT_DIR$/template-files/BareboneUrls.txt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DarkyenusTimeTracker">
+    <option name="totalTimeSeconds" value="21183" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2n9Tva05Q5JJYpiZfcLPSdse3GR" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore_missing_gitignore": "true",
+    "last_opened_file_path": "C:/Users/Admin/Desktop/projects/django-f-cli",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.1.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0dda0dc0-3108-4ff4-aeba-c4b3b6ca3caf" name="Changes" comment="" />
+      <created>1728384523234</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1728384523234</updated>
+      <workItem from="1728384524204" duration="2920000" />
+      <workItem from="1728389898408" duration="26431000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
