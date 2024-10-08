@@ -1,3 +1,8 @@
+# Djangler
+
+Djangler is a CLI made for django to extend the base CLI
+
+
 ## Install al dependencies
 run ``npm install``
 
