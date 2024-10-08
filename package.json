@@ -1,5 +1,5 @@
 {
-  "name": "django-f-cli",
+  "name": "djangler",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
