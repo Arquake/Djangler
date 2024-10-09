@@ -23,7 +23,10 @@
 Djangler is a CLI made for django to extend the base CLI
 
 
-## Install al dependencies
+## Install Django
+run `python -m pip install Django`
+
+## Install all dependencies
 run ``npm install``
 
 ## Link the CLI
