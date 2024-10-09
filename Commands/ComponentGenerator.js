@@ -1,5 +1,6 @@
 import CreateView from "./file-generator/CreateView.js";
 import CreateUnderApp from "./file-generator/CreateUnderApp.js";
+import CreateModel from "./file-generator/CreateModel.js";
 
 export default class ComponentGenerator {
 
@@ -14,7 +15,7 @@ export default class ComponentGenerator {
                         await CreateView.handleCommand(command.slice(1))
                         break;
                     case 'm':
-                        console.log('Create Model')
+                        await CreateModel.handleCommand(command.slice(1));
                         break;
                     case 'md':
                         console.log('Create Middleware')

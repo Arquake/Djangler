@@ -19,7 +19,8 @@ export default class CreateApp {
         let errorStatus = false
 
         try {
-            const name = await this.askName()
+            const name = await this.getName(command)
+            console.log("name" ,name)
             let spinner = createSpinner(' Creating project').start();
             const com = spawn(`django-admin startproject ${name}`, {'shell':'powershell.exe'});
 
@@ -68,6 +69,20 @@ export default class CreateApp {
             ConsoleLogs.showErrorMessage(e.message)
         }
 
+    }
+
+
+    static async getName(command) {
+        if (command.length > 1) {
+            throw new Error("Too many arguments given");
+        }
+        else if (command.length === 1 && (/--.*/g).test(command[0])) {
+            console.log(command[0].replace("--", ""))
+            await command[0].replace("--", "")
+        }
+        else {
+            await this.askName()
+        }
     }
 
     /**
