@@ -17,17 +17,24 @@
     &nbsp;&nbsp;
     <img src="https://img.shields.io/badge/Made%20with-Node js-1f425f.svg">
     &nbsp;&nbsp;
-    <img src="https://img.shields.io/badge/version-1.0.0-blue.svg">
+    <img src="https://img.shields.io/badge/version-1.0.1-blue.svg">
 </div>
 
 Djangler is a CLI made for django to extend the base CLI
 
 
-## Install al dependencies
-run ``npm install``
+## Install Django
+run `python -m pip install Django`
+
+## Install all dependencies
+Go into Djangler's file and run
+``npm install``
 
 ## Link the CLI
-run ``npm link``
+Into the Djangler file and run
+``npm link``
+
+# Djangler is now linked !
 
 ## Run commands
 

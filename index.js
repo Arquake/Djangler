@@ -1,16 +1,10 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
-import inquirer from 'inquirer';
-import fs from 'fs';
 import Help from './Commands/Help.js';
 import ComponentGenerator from "./Commands/ComponentGenerator.js";
 import ConsoleLogs from "./console-logs/ConsoleLogs.js";
 import CreateApp from "./Commands/CreateApp.js";
 import Serve from "./Commands/Serve.js";
-
-const currentDir = process.cwd();
-
 
 try {
     switch (process.argv[2]) {
