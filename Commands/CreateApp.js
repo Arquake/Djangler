@@ -23,23 +23,24 @@ export default class CreateApp {
             let spinner = createSpinner(' Creating project').start();
             const com = spawn(`django-admin startproject ${name}`, {'shell':'powershell.exe'});
 
+
             com.stdout.on("data", data => {
             });
 
             com.stderr.on("data", data => {
                 spinner.error({text: ` Error !`})
                 ConsoleLogs.showErrorMessages(["Naming Error !", "Please choose another name"])
-                this.errorStatus = true
+                errorStatus = true
             });
 
             com.on('error', (error) => {
                 spinner.error({text: ` Error !`})
                 ConsoleLogs.showErrorMessages(["Naming Error !", "Please choose another name"])
-                this.errorStatus = true
+                errorStatus = true
             });
 
             com.on("close", code => {
-                if (!this.errorStatus) {
+                if (!errorStatus) {
                     spinner.success({text: ` created files !`})
 
                     spinner = createSpinner(' Creating os settings.py').start();
