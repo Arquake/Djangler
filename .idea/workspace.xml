@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/ComponentGenerator.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/ComponentGenerator.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/CreateApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CreateApp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +35,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;model-creation&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -67,6 +64,9 @@
       <workItem from="1728458194039" duration="570000" />
       <workItem from="1728460207086" duration="6579000" />
       <workItem from="1728473504394" duration="43000" />
+      <workItem from="1728541557623" duration="3731000" />
+      <workItem from="1728565489274" duration="2060000" />
+      <workItem from="1728573958080" duration="3227000" />
     </task>
     <servers />
   </component>
