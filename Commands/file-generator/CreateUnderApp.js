@@ -64,10 +64,26 @@ export default class CreateUnderApp {
 
                     spinner = createSpinner(' Creating views').start();
                     this.generateBasicView(viewName)
+                    spinner.success()
+
+                    spinner = createSpinner(' Creating template directory').start();
                     this.generateTemplateDirectory(viewName)
+                    spinner.success()
+
+                    spinner = createSpinner(' Generating basic view').start();
+                    this.generateBasicView(viewName)
+                    spinner.success()
+
+                    spinner = createSpinner(' Enabling templates').start();
                     this.allowTemplates(viewName)
+                    spinner.success()
+
+                    spinner = createSpinner(' Generating rooting').start();
                     this.generateRootRouting(viewName)
                     spinner.success()
+
+
+
 
                     const successMessage = viewName + " View generated with success !"
                     ConsoleLogs.showSuccessMessage(successMessage);

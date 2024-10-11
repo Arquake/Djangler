@@ -56,6 +56,10 @@ export default class CreateApp {
                     this.generateBaseTemplates(name)
                     spinner.success({text: ` created base templates !`})
 
+                    spinner = createSpinner(' Creating public directory').start();
+                    this.generatePublicDirectory(name)
+                    spinner.success()
+
                         ConsoleLogs.showSuccessMessages(
                             [
                                 `App created with success !`,
@@ -78,10 +82,10 @@ export default class CreateApp {
         }
         else if (command.length === 1 && (/--.*/g).test(command[0])) {
             console.log(command[0].replace("--", ""))
-            await command[0].replace("--", "")
+            return await command[0].replace("--", "")
         }
         else {
-            await this.askName()
+            return await this.askName()
         }
     }
 
@@ -125,5 +129,11 @@ export default class CreateApp {
         fs.mkdirSync(`${process.cwd()}/${appName}/Templates`);
         const baseTemplate = fs.readFileSync(dirname + `/template-files/BareboneBaseTemplate.txt`).toString();
         fs.writeFileSync(`${process.cwd()}/${appName}/Templates/base.html`, baseTemplate.replace("%APP_BASE_NAME%", appName))
+    }
+
+    static generatePublicDirectory(appName) {
+        fs.mkdirSync(`${process.cwd()}/${appName}/public`);
+        let settingsContent = fs.readFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`)
+        fs.writeFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`, settingsContent + "\n\nMEDIA_ROOT =  os.path.join(BASE_DIR, 'public')\nMEDIA_URL = '/public/'")
     }
 }
