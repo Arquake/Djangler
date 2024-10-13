@@ -63,6 +63,8 @@ export default class CreateModel {
 
             fs.writeFileSync( `${appName}/models.py`, newContent)
 
+            this.generateForm(appName, modelName);
+
             ConsoleLogs.showSuccessMessages(["Model updated successfully!", "Run 'dja m migrate' to migrate the changes"])
         }
         catch (error) {
@@ -469,5 +471,45 @@ export default class CreateModel {
         }
 
         return classNames
+    }
+
+    static generateForm(appName, modelName) {
+        let fileContent = fs.readFileSync(`${appName}/models.py`, "utf8");
+        const regexGetClass = new RegExp(`class\\s+${modelName}\\s*\\s*([\\s\\S]*?)(?=\\n\\S|$)\\s*pass`, 'gm');
+        let modelContent = fileContent.match(regexGetClass)[0]
+        let allVariables = modelContent.match(/\s*([a-zA-Z]+)\s*=\s*models/g)
+        for (let i = 0; i < allVariables.length; i++) {
+            allVariables[i] = allVariables[i].match(/(\w+)\s*=/)[1];
+        }
+
+        let newContent = `class ${modelName}Form(forms.ModelForm):\n`+
+            `\tclass Meta:\n`+
+            `\t\tmodel = ${modelName}\n`+
+            `\t\tfields = [`;
+
+        allVariables.forEach(name => {
+            newContent += `'${name}'` + ", "
+        })
+
+        const lastCommaIndex = newContent.lastIndexOf(',');
+        if (lastCommaIndex !== -1) {
+            newContent = newContent.slice(0, lastCommaIndex) + newContent.slice(lastCommaIndex + 1);
+        }
+
+        newContent += ']'
+
+        let formFileContent = fs.readFileSync(`${appName}/forms.py`, "utf8")
+        console.log()
+        if((new RegExp(`from \.models import ${modelName}`)).test(formFileContent)) {
+            let classRegExp = new RegExp(`(class ${modelName}Form\\(forms.ModelForm\\):(.|\\s)*${modelName}\\s*fields\\s*=\\s*\\[.*\\])`)
+            
+            formFileContent.replace(classRegExp, newContent)
+            fs.writeFileSync(`${appName}/forms.py`, formFileContent)
+        }
+        else {
+            formFileContent = `from \.models import ${modelName}\n` + formFileContent +`\n\n${newContent}`
+            fs.writeFileSync(`${appName}/forms.py`, formFileContent)
+        }
+
     }
 }

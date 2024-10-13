@@ -92,6 +92,10 @@ export default class CreateUnderApp {
                     this.installingTheApp(appName)
                     spinner.success()
 
+                    spinner = createSpinner(' Generating forms.py file').start();
+                    this.generateFormFile(appName)
+                    spinner.success()
+
                     ConsoleLogs.showSuccessMessage(appName + " View generated with success !");
                 }
             }
@@ -206,5 +210,13 @@ export default class CreateUnderApp {
 
         const newSettings = settings.replace(reg, newSettingsUpdated)
         fs.writeFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`, newSettings)
+    }
+
+    /**
+     * generate the forms.py file for the app
+     * @param appName the app name
+     */
+    static generateFormFile(appName) {
+        fs.writeFileSync(`${process.cwd()}/${appName}/forms.py`, 'from django import forms');
     }
 }
