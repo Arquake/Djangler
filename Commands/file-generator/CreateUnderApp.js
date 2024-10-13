@@ -47,14 +47,15 @@ export default class CreateUnderApp {
         });
 
         com.stderr.on("data", data => {
+            process.stdout.write(data);
             spinner.error()
-            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Applications names should be only containing letters from A -> Z`])
+            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Make sure you are in your project directory`])
             errorStatus = true
         });
 
         com.on('error', (error) => {
             spinner.error()
-            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Applications names should be only containing letters from A -> Z`])
+            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Make sure you are in your project directory`])
             errorStatus = true
         });
 
@@ -171,8 +172,7 @@ export default class CreateUnderApp {
         const settings = fs.readFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`).toString();
         const currentTemplates = settings.match(/'DIRS': \[(.*?)\]/m)
 
-        const newImport = `os.path.join(BASE_DIR, '${appName}/Templates')`
-        const newDirUpdated = `'DIRS': [${currentTemplates[1]}${currentTemplates[1].length>0? ",":""}${newImport}]`
+        const newDirUpdated = `'DIRS': [${currentTemplates[1]}${currentTemplates[1].length>0? ",":""}'${appName}/Templates']`
 
         const newSettings = settings.replace(/'DIRS': \[(.*?)\]/m, newDirUpdated)
         fs.writeFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`, newSettings)

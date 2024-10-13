@@ -47,17 +47,14 @@ export default class CreateApp {
                 if (!errorStatus) {
                     spinner.success({text: ` created files !`})
 
-                    spinner = createSpinner(' Creating os settings.py').start();
-                    this.importingOsIntoSettings(name)
-                    spinner.success({text: ` created os !`})
+                    spinner = createSpinner(' Creating base templates').start();
+                    this.createTemplateFolder(name)
+                    this.generateBaseTemplates(name)
+                    spinner.success({text: ` created base templates !`})
 
                     spinner = createSpinner(' Creating base routing').start();
                     this.generateBaseRouting(name)
                     spinner.success({text: ` created routing !`})
-
-                    spinner = createSpinner(' Creating base templates').start();
-                    this.generateBaseTemplates(name)
-                    spinner.success({text: ` created base templates !`})
 
                     spinner = createSpinner(' Creating public directory').start();
                     this.generatePublicDirectory(name)
@@ -118,13 +115,13 @@ export default class CreateApp {
     }
 
     /**
-     * import os in the settings.py file
+     * generate the Templates folder at the root of the project
      * @param appName the name of the app
      */
-    static importingOsIntoSettings(appName){
+    static createTemplateFolder(appName){
         const settings = fs.readFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`).toString()
-        const newDirUpdated = `'DIRS': [os.path.join(BASE_DIR, 'Templates')]`
-        const newSettings = "import os \n\n" + settings.replace(/'DIRS': \[(.*?)\]/m, newDirUpdated)
+        const newDirUpdated = `'DIRS': ['Templates']`
+        const newSettings = settings.replace(/'DIRS': \[(.*?)\]/m, newDirUpdated)
         fs.writeFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`, newSettings);
     }
 
@@ -155,6 +152,6 @@ export default class CreateApp {
     static generatePublicDirectory(appName) {
         fs.mkdirSync(`${process.cwd()}/${appName}/public`);
         let settingsContent = fs.readFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`)
-        fs.writeFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`, settingsContent + "\n\nMEDIA_ROOT =  os.path.join(BASE_DIR, 'public')\nMEDIA_URL = '/public/'")
+        fs.writeFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`, settingsContent + "\n\nPath(BASE_DIR, 'public')\nMEDIA_URL = '/public/'")
     }
 }
