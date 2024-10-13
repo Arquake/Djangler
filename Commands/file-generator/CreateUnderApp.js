@@ -6,50 +6,55 @@ import {spawn} from "child_process";
 import inquirer from "inquirer";
 import InvalidInputError from "../../Errors/InvalidInputError.js";
 import {createSpinner} from "nanospinner";
+import chalk from "chalk";
 
 export default class CreateUnderApp {
+
+    /**
+     * handle the creation of the app
+     * @param command the flags
+     */
     static async handleCommand(command) {
-        try {
-            let viewName = "";
-            if (command.length > 0) {
-                if ((/--[a-zA-Z-]*/g).test(command[0])) {
-                    viewName = command[0].replace("--", "");
-                    this.createApp(viewName);
-                }
-                else {
-                    throw new Error('Invalid Parameter')
-                }
-            }
-            else {
-                viewName = await this.askName();
+        let viewName = "";
+        if (command.length > 0) {
+            if ((/--[a-zA-Z]+/g).test(command[0])) {
+                viewName = command[0].replace("--", "");
                 this.createApp(viewName);
             }
+            else {
+                ConsoleLogs.showErrorMessages(["Invalid name", "The name should only be composed of letters from A -> Z"]);
+            }
         }
-        catch (error) {
-            ConsoleLogs.showErrorMessage(error.message);
+        else {
+            viewName = await this.askName();
+            this.createApp(viewName);
         }
     }
 
-    static createApp(viewName) {
+    /**
+     * create the app with the given name
+     * @param appName the app name
+     */
+    static createApp(appName) {
 
-        viewName = viewName.toLowerCase()
+        appName = appName.toLowerCase()
 
         let errorStatus = false
         let spinner = createSpinner(' Creating project').start();
-        let com = spawn(`python`, ['manage.py', 'startapp', `${viewName}`], {'shell':'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' }});
+        let com = spawn(`python`, ['manage.py', 'startapp', `${appName}`], {'shell':'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' }});
 
         com.stdout.on("data", data => {
         });
 
         com.stderr.on("data", data => {
             spinner.error()
-            ConsoleLogs.showErrorMessage(`Could not create an app named ${viewName}`)
+            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Applications names should be only containing letters from A -> Z`])
             errorStatus = true
         });
 
         com.on('error', (error) => {
             spinner.error()
-            ConsoleLogs.showErrorMessage(`Could not create an app named ${viewName}`)
+            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Applications names should be only containing letters from A -> Z`])
             errorStatus = true
         });
 
@@ -59,43 +64,47 @@ export default class CreateUnderApp {
                     spinner.success({text: ` created !`})
 
                     spinner = createSpinner(' Creating urls').start();
-                    this.createUrls(viewName)
+                    this.createUrls(appName)
                     spinner.success()
 
                     spinner = createSpinner(' Creating views').start();
-                    this.generateBasicView(viewName)
+                    this.generateBasicView(appName)
                     spinner.success()
 
                     spinner = createSpinner(' Creating template directory').start();
-                    this.generateTemplateDirectory(viewName)
+                    this.generateTemplateDirectory(appName)
                     spinner.success()
 
                     spinner = createSpinner(' Generating basic view').start();
-                    this.generateBasicView(viewName)
+                    this.generateBasicView(appName)
                     spinner.success()
 
                     spinner = createSpinner(' Enabling templates').start();
-                    this.allowTemplates(viewName)
+                    this.allowTemplates(appName)
                     spinner.success()
 
                     spinner = createSpinner(' Generating rooting').start();
-                    this.generateRootRouting(viewName)
+                    this.generateRootRouting(appName)
                     spinner.success()
 
+                    spinner = createSpinner(' Installing the application').start();
+                    this.installingTheApp(appName)
+                    spinner.success()
 
-
-
-                    const successMessage = viewName + " View generated with success !"
-                    ConsoleLogs.showSuccessMessage(successMessage);
+                    ConsoleLogs.showSuccessMessage(appName + " View generated with success !");
                 }
             }
             catch (error) {
                 spinner.error()
-                ConsoleLogs.showErrorMessage(`Could not create an app named ${viewName} ` + error )
+                ConsoleLogs.showErrorMessage(`Could not create an app named ${appName} ` + error )
             }
         });
     }
 
+    /**
+     * ask the user for the app name
+     * @return {Promise<*|string>} the app name
+     */
     static async askName() {
         const controllerAnswers = await inquirer.prompt({
             name: 'app_name',
@@ -107,24 +116,29 @@ export default class CreateUnderApp {
         })
 
         if (controllerAnswers.app_name === "") {
-            throw new InvalidInputError();
+            console.log(chalk.red("Please enter a valid name with only letters A -> Z"));
+            return this.askName()
         }
 
         return controllerAnswers.app_name.toLowerCase();
     }
 
-
+    /**
+     * overwrite the content of the current view/urls.py
+     * @param viewName
+     */
     static createUrls(viewName) {
-
         const currentDir = process.cwd();
-
         const fileContent = this.getUrlsContent();
         fs.writeFileSync(`${currentDir}/${viewName}/urls.py`, fileContent);
     }
 
+    /**
+     * get the BarebonesUrls.txt content
+     * @return {string} BarebonesUrls.txt content
+     */
     static getUrlsContent() {
         const urlsFilePath = path.join(dirname, './template-files/BareboneUrls.txt');
-
         return fs.readFileSync(urlsFilePath, 'utf8');
     }
 
@@ -138,6 +152,10 @@ export default class CreateUnderApp {
         fs.writeFileSync(`${process.cwd()}/${viewName}/views.py`, viewContent);
     }
 
+    /**
+     * create a template directory for the app and a basic template that extends from the one in the root/Templates folder
+     * @param viewName the view name
+     */
     static generateTemplateDirectory(viewName) {
         fs.mkdirSync(`${process.cwd()}/${viewName}/Templates`);
         const templateTemplateLink = path.join(dirname, './template-files/BareboneTemplate.txt');
@@ -145,26 +163,48 @@ export default class CreateUnderApp {
         fs.writeFileSync(`${process.cwd()}/${viewName}/Templates/index.html`, templateTemplate)
     }
 
-    static allowTemplates(viewName){
+    /**
+     * Allow the creation of template for the app in the settings.py app
+     * @param appName the app name
+     */
+    static allowTemplates(appName){
         const settings = fs.readFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`).toString();
         const currentTemplates = settings.match(/'DIRS': \[(.*?)\]/m)
 
-        const newImport = `os.path.join(BASE_DIR, '${viewName}/Templates')`
+        const newImport = `os.path.join(BASE_DIR, '${appName}/Templates')`
         const newDirUpdated = `'DIRS': [${currentTemplates[1]}${currentTemplates[1].length>0? ",":""}${newImport}]`
 
         const newSettings = settings.replace(/'DIRS': \[(.*?)\]/m, newDirUpdated)
         fs.writeFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`, newSettings)
     }
 
-
+    /**
+     * generate a rooting in the urls.py file
+     * @param viewName the app name
+     */
     static generateRootRouting(viewName){
         const urls = fs.readFileSync(`${process.cwd()}/${path.basename(process.cwd())}/urls.py`).toString();
         const currentTemplates = urls.match(/urlpatterns\s*=\s*\[\s*([^\]]*?)\s*\]/m)
 
         const newUrl = `\npath('${viewName}/', include('${viewName}.urls'))`
-        const newDirUpdated = `urlpatterns = [${currentTemplates[1]}${newUrl},\n]`
+        const newRooting = `urlpatterns = [${currentTemplates[1]}${newUrl},\n]`
 
-        const newUrls = urls.replace(/urlpatterns\s*=\s*\[\s*([^\]]*?)\s*\]/m, newDirUpdated)
+        const newUrls = urls.replace(/urlpatterns\s*=\s*\[\s*([^\]]*?)\s*\]/m, newRooting)
         fs.writeFileSync(`${process.cwd()}/${path.basename(process.cwd())}/urls.py`, newUrls)
+    }
+
+    /**
+     * Install the app in the settings.py file
+     * @param appName the app name
+     */
+    static installingTheApp(appName) {
+        const settings = fs.readFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`).toString();
+        let reg = /INSTALLED_APPS\s*=\s*\[\s*((?:.|\r|\n)*?)\s*\]/
+        const currentTemplates = settings.match(reg)
+
+        const newSettingsUpdated = `INSTALLED_APPS = [\n    ${currentTemplates[1]}${currentTemplates[1].length>0? "\n    ":""}'${appName}',\n]`
+
+        const newSettings = settings.replace(reg, newSettingsUpdated)
+        fs.writeFileSync(`${process.cwd()}/${path.basename(process.cwd())}/settings.py`, newSettings)
     }
 }

@@ -6,12 +6,13 @@ import ConsoleLogs from "../console-logs/ConsoleLogs.js";
 import fs from "fs";
 import path from "path";
 import {dirname} from "../dirname.js";
+import chalk from "chalk";
 
 export default class CreateApp {
 
     /**
      * Create a new django project with an admin setup
-     * @param command
+     * @param command the command flags
      * @returns {Promise<void>}
      */
     static async handleCommand(command) {
@@ -19,8 +20,10 @@ export default class CreateApp {
         let errorStatus = false
 
         try {
+            if (command.length > 1) {
+                throw new Error("Too many arguments given");
+            }
             const name = await this.getName(command)
-            console.log("name" ,name)
             let spinner = createSpinner(' Creating project').start();
             const com = spawn(`django-admin startproject ${name}`, {'shell':'powershell.exe'});
 
@@ -63,7 +66,7 @@ export default class CreateApp {
                         ConsoleLogs.showSuccessMessages(
                             [
                                 `App created with success !`,
-                                `Created at : ${process.cwd()}/${name.replace(" ", "")}`,
+                                `Created at : ${process.cwd()}\\${name.replace(" ", "")}`,
                             ]
                         )
                     }
@@ -75,18 +78,20 @@ export default class CreateApp {
 
     }
 
-
+    /**
+     * take the list of flags and try to find one that would be with the '--name' format
+     * if one is found it returns this flag
+     * if none is found it asks the user for a name
+     * @param command the array of flags
+     * @return {Promise<*|string>} the name of the app
+     */
     static async getName(command) {
-        if (command.length > 1) {
-            throw new Error("Too many arguments given");
+        for (let i = 0; i < command.length; i++) {
+            if ((/--.+/g).test(command[i])) {
+                return command[i].replace("--", "")
+            }
         }
-        else if (command.length === 1 && (/--.*/g).test(command[0])) {
-            console.log(command[0].replace("--", ""))
-            return await command[0].replace("--", "")
-        }
-        else {
-            return await this.askName()
-        }
+        return await this.askName()
     }
 
     /**
@@ -105,13 +110,17 @@ export default class CreateApp {
         })
 
         if (nameAnswer.name === "") {
-            throw new InvalidInputError();
+            console.log(chalk.red("Please enter a valid name"))
+            return await this.askName()
         }
 
         return nameAnswer.name.replace(" ", "");
     }
 
-
+    /**
+     * import os in the settings.py file
+     * @param appName the name of the app
+     */
     static importingOsIntoSettings(appName){
         const settings = fs.readFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`).toString()
         const newDirUpdated = `'DIRS': [os.path.join(BASE_DIR, 'Templates')]`
@@ -119,18 +128,30 @@ export default class CreateApp {
         fs.writeFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`, newSettings);
     }
 
+    /**
+     * rewrite the original urls.py to match with the cli
+     * @param appName the app name
+     */
     static generateBaseRouting(appName) {
         const urlsBaseTemplate = path.join(dirname, "./template-files/BareboneBaseUrls.txt");
         const newBase = fs.readFileSync(urlsBaseTemplate)
         fs.writeFileSync(`${process.cwd()}/${appName}/${appName}/urls.py`, newBase);
     }
 
+    /**
+     * generate a base templates for views inside the root folder
+     * @param appName the app name
+     */
     static generateBaseTemplates(appName) {
         fs.mkdirSync(`${process.cwd()}/${appName}/Templates`);
         const baseTemplate = fs.readFileSync(dirname + `/template-files/BareboneBaseTemplate.txt`).toString();
         fs.writeFileSync(`${process.cwd()}/${appName}/Templates/base.html`, baseTemplate.replace("%APP_BASE_NAME%", appName))
     }
 
+    /**
+     * generate a public directory to store pictures inside the root folder
+     * @param appName the app name
+     */
     static generatePublicDirectory(appName) {
         fs.mkdirSync(`${process.cwd()}/${appName}/public`);
         let settingsContent = fs.readFileSync(`${process.cwd()}/${appName}/${appName}/settings.py`)

@@ -7,6 +7,10 @@ import path from "path";
 
 export default class CreateModel {
 
+    /**
+     * handle model creation commands
+     * @param command the flags of the command
+     */
     static async handleCommand(command) {
         try {
             const appName = await this.getAppName(command)
@@ -51,7 +55,6 @@ export default class CreateModel {
             let newContent = ""
 
             if (modelContent.length > 0) {
-                console.log(fileContent)
                 newContent = fileContent.replace(modelContent, modelContent.replace("    pass", fieldItems))
             }
             else {
@@ -59,13 +62,19 @@ export default class CreateModel {
             }
 
             fs.writeFileSync( `${appName}/models.py`, newContent)
+
+            ConsoleLogs.showSuccessMessages(["Model updated successfully!", "Run 'dja m migrate' to migrate the changes"])
         }
         catch (error) {
-            console.error(error)
             ConsoleLogs.showErrorMessage("No model inside the selected directory!");
         }
     }
 
+    /**
+     * generate the model name
+     * @param command the command the user gave
+     * @return {Promise<*|string>} the model's name
+     */
     static async makeNewModel(command) {
         try {
             if (command.length > 0) {
@@ -83,6 +92,11 @@ export default class CreateModel {
         }
     }
 
+    /**
+     * ask the user the name of the field
+     * @return {Promise<string>} the name of the field
+     * @throws InvalidInputError if the input is empty
+     */
     static async askFieldName(){
         const answer = await inquirer.prompt({
             name: 'field_name',
@@ -110,11 +124,15 @@ export default class CreateModel {
 
     }
 
+    /**
+     * ask the user for the field type
+     * @return {Promise<string|*|string>} the field type for the code
+     */
     static async askFieldsType(){
         const answer = await inquirer.prompt({
             name: 'field_type',
             type: 'input',
-            message: 'What is the field type?',
+            message: 'What is the field type? [help]',
             default() {
                 return "string"
             },
@@ -146,7 +164,7 @@ export default class CreateModel {
             case "image":
                 return "ImageField";
             case "manyToOne":
-                return "ForeignKeyField";
+                return "ForeignKey";
             case "oneToOne":
                 return "OneToOneField";
             case "manyToMany":
@@ -171,7 +189,7 @@ export default class CreateModel {
                     "string" + "\t\t" + "text" + "\n\n" +
                     "int" + "\t\t" + "posint" + "\t\t" + "float" + "\t\t" + "decimal" + "\n\n" +
                     "boolean" + "\n\n" +
-                    "date" + "\t\t" + "time" + + "\t\t" + "dateTime" + "\n\n" +
+                    "date" + "\t\t" + "time" + "\t\t" + "dateTime" + "\n\n" +
                     "file" + "\t\t" + "image" + "\n\n" +
                     "manyToOne" + "\t" + "oneToOne" + "\t" + "manyToMany" + "\n\n" +
                     "email" + "\t\t" + "url" + "\n\n" +
@@ -186,13 +204,18 @@ export default class CreateModel {
         }
     }
 
+    /**
+     * create a field
+     * @param appName the app name
+     * @param modelName the model name
+     * @return {Promise<string>} the code to make the field
+     */
     static async makeNewField(appName, modelName) {
         let name = await this.askFieldName();
         let type = await this.askFieldsType();
         let parameters = ""
         switch (type) {
             case "CharField":
-            case "TextField":
             case "SlugField":
             case "EmailField":
             case "URLField":
@@ -205,15 +228,27 @@ export default class CreateModel {
             case "ImageField":
                 parameters = `upload_to='${appName}/${modelName}/${name}'`;
                 break;
+            case "ForeignKey":
+            case "OneToOneField":
+                parameters = await this.makeManyToField(appName, modelName, name);
+                break;
+            case "ManyToManyField":
+                parameters = await this.makeOneToOne(appName, modelName, name);
+                break;
             default:
                 break;
         }
         let nullable = await this.askIsNullable()
 
-        return `${name} = models.${type}(${parameters}${parameters.length>0 && nullable?',':''}blank=False${nullable?', null=True':''})`
+        return `${name} = models.${type}(${parameters}${parameters.length>0 || nullable?', ':''}blank=False${nullable?', null=True':''})`
 
     }
 
+    /**
+     * ask the user for the model's name
+     * @return {Promise<*|string>} the name the user gave
+     * @throws InvalidInputError if the user did not use a valid name
+     */
     static async askModelName() {
         const answer = await inquirer.prompt({
             name: 'model_name',
@@ -240,6 +275,10 @@ export default class CreateModel {
         return await this.askModelName();
     }
 
+    /**
+     * Ask the user if the field is nullable
+     * @return {Promise<boolean|*|boolean|string>} true if it is nullable | false otherwise
+     */
     static async askIsNullable() {
         const answer = await inquirer.prompt({
             name: 'model_nullable',
@@ -263,6 +302,10 @@ export default class CreateModel {
         }
     }
 
+    /**
+     * Ask the user for the length of a field
+     * @return {Promise<any|string>} the length given by the user
+     */
     static async askMaxLength(){
         const answer = await inquirer.prompt({
             name: 'max_length',
@@ -280,6 +323,10 @@ export default class CreateModel {
         return this.askMaxLength()
     }
 
+    /**
+     * Ask the user how many digit should be before the coma
+     * @return {Promise<any|string>} the number of digits before the coma (>=1)
+     */
     static async askDecimalBeforeComa(){
         const answer = await inquirer.prompt({
             name: 'decimal_before_coma',
@@ -297,6 +344,10 @@ export default class CreateModel {
         return this.askDecimalBeforeComa()
     }
 
+    /**
+     * Ask the user how many digit should be after the coma
+     * @return {Promise<any|string>} the number of digits after the coma (>=1)
+     */
     static async askDecimalAfterComa(){
         const answer = await inquirer.prompt({
             name: 'decimal_after_coma',
@@ -314,6 +365,13 @@ export default class CreateModel {
         return this.askDecimalAfterComa()
     }
 
+    /**
+     * get the app name
+     * if a flag like '-name' is found return the name
+     * otherwise ask for the name
+     * @param command the command given by the user
+     * @return {Promise<*|string>} the app name
+     */
     static async getAppName(command) {
         try {
             if (command.length > 0) {
@@ -324,7 +382,6 @@ export default class CreateModel {
                 }
             }
             return await this.askAppName();
-
         }
         catch (error) {
             throw error
@@ -353,5 +410,64 @@ export default class CreateModel {
         })
 
         return res.app_name
+    }
+
+    /**
+     * return the parameters to make a many-to-one or many-to-many relation
+     * @param appName the app name
+     * @param modelName the model name
+     * @param fieldName the field name
+     * @return {Promise<string>} the parameter of the field
+     */
+    static async makeManyToField(appName, modelName, fieldName){
+        let res = await inquirer.prompt({
+            name: 'model_name',
+            type: 'list',
+            message: 'What is the target model?',
+            choices: this.getAllClasses(appName, modelName)
+        })
+
+        return `"${res.model_name}", on_delete=models.CASCADE, related_name="${modelName.toLowerCase()}_${fieldName.toLowerCase()}s"`
+    }
+
+    /**
+     * return the parameters to make a one-to-one relation
+     * @param appName the app name
+     * @param modelName the model name
+     * @param fieldName the field name
+     * @return {Promise<string>} the parameter of the field
+     */
+    static async makeOneToOne(appName, modelName, fieldName){
+        let res = await inquirer.prompt({
+            name: 'model_name',
+            type: 'list',
+            message: 'What is the target model?',
+            choices: this.getAllClasses(appName, modelName)
+        })
+
+        return `\"${res.model_name}\", related_name="${modelName.toLowerCase()}_${fieldName.toLowerCase()}s"`
+    }
+
+    /**
+     * get every available classes inside the Application's models.py selected
+     * @param appName the app name
+     * @param modelName the model name
+     * @return {(string|null)[]}
+     */
+    static getAllClasses(appName, modelName){
+        const modelFile = fs.readFileSync(`${process.cwd()}/${appName}/models.py`, "utf8");
+
+        const availableModels = modelFile.match(new RegExp('class\\s+[a-zA-Z]+\\s*(.*)', 'gm'))
+
+        const classNames = availableModels.map(line => {
+            const match = line.match(/^class\s+(\w+)\s*\(/);
+            return match ? match[1] : null;
+        }).filter(name => name !== null);
+
+        if(!classNames.includes(modelName)) {
+            classNames.push(modelName)
+        }
+
+        return classNames
     }
 }
