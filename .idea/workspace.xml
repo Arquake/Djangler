@@ -5,14 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Commands/file-generator/ManageMigration.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Commands/migrations/MakeMigration.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Commands/migrations/Migrate.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/ComponentGenerator.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/ComponentGenerator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/CreateApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CreateApp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/Help.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/Help.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/Serve.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/Serve.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateView.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-logs/ConsoleLogs.js" beforeDir="false" afterPath="$PROJECT_DIR$/console-logs/ConsoleLogs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DarkyenusTimeTracker">
+    <option name="totalTimeSeconds" value="30125" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,23 +46,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;model-creation&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.1.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13" />
       </set>
     </attachedChunks>
   </component>
@@ -55,7 +76,13 @@
       <option name="presentableId" value="Default" />
       <updated>1728458191287</updated>
       <workItem from="1728458194039" duration="570000" />
-      <workItem from="1728460207086" duration="513000" />
+      <workItem from="1728460207086" duration="6579000" />
+      <workItem from="1728473504394" duration="43000" />
+      <workItem from="1728541557623" duration="3731000" />
+      <workItem from="1728565489274" duration="2060000" />
+      <workItem from="1728573958080" duration="3227000" />
+      <workItem from="1728726427340" duration="9167000" />
+      <workItem from="1728812787943" duration="11026000" />
     </task>
     <servers />
   </component>

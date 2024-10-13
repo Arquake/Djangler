@@ -20,6 +20,10 @@ export default class ConsoleLogs {
         console.log(chalk.bgRed.hex('#EEEEEE')(this.generateMessage(msg)));
     }
 
+    /**
+     * take a message and stylize it
+     * @param msg the message
+     */
     static generateMessage(msg){
         return (
             "\n" +
@@ -29,14 +33,26 @@ export default class ConsoleLogs {
         );
     }
 
+    /**
+     * take an array of messages to stylize and print them to the console
+     * @param msgs the array with all the messages in it
+     */
     static showSuccessMessages(msgs) {
         console.log(chalk.bgGreen.hex('#EEEEEE')(this.generateMultpipleLinemsg(msgs)));
     }
 
+    /**
+     * take an array of messages to stylize and print them to the console
+     * @param msgs the array with all the messages in it
+     */
     static showErrorMessages(msgs) {
         console.log(chalk.bgRed.hex('#EEEEEE')(this.generateMultpipleLinemsg(msgs)));
     }
 
+    /**
+     * take an array of messages and center them one under another
+     * @param msgs the array with all the messages in it
+     */
     static generateMultpipleLinemsg(msgs) {
         let newMsg = ""
         let maxLength = 0

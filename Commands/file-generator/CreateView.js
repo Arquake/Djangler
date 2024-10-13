@@ -15,7 +15,7 @@ export default class CreateView {
                 await this.createView(controllerName);
             }
             else {
-                throw new Error('Invalid Parameter')
+                ConsoleLogs.showErrorMessage("Parameters given don't exist");
             }
         }
         else {
@@ -50,7 +50,6 @@ export default class CreateView {
         return controllerAnswers.view_name;
     }
 
-
     /**
      * create the Controller
      * Create a directory named /Controllers if it does not exist
@@ -78,7 +77,11 @@ export default class CreateView {
         }
     }
 
-
+    /**
+     * generate a string that contains what the Controller should have inside it
+     * @param controllerName the controller name
+     * @return {string} the controller code
+     */
     static getControllerContent(controllerName) {
         const templateFilePath = path.join(dirname, './template-files/BareboneUrls.txt');
 
