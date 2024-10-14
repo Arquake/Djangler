@@ -477,7 +477,8 @@ export default class CreateModel {
         let fileContent = fs.readFileSync(`${appName}/models.py`, "utf8");
         const regexGetClass = new RegExp(`class\\s+${modelName}\\s*\\s*([\\s\\S]*?)(?=\\n\\S|$)\\s*pass`, 'gm');
         let modelContent = fileContent.match(regexGetClass)[0]
-        let allVariables = modelContent.match(/\s*([a-zA-Z]+)\s*=\s*models/g)
+        let allVariables = modelContent.match(/\s*([a-zA-Z]+)\s*=\s*models\.\w+(.*)/g)
+        console.log(allVariables)
         for (let i = 0; i < allVariables.length; i++) {
             allVariables[i] = allVariables[i].match(/(\w+)\s*=/)[1];
         }
@@ -485,7 +486,7 @@ export default class CreateModel {
         let newContent = `class ${modelName}Form(forms.ModelForm):\n`+
             `\tclass Meta:\n`+
             `\t\tmodel = ${modelName}\n`+
-            `\t\tfields = [`;
+            `\t\tfields = [ `;
 
         allVariables.forEach(name => {
             newContent += `'${name}'` + ", "
@@ -501,9 +502,8 @@ export default class CreateModel {
         let formFileContent = fs.readFileSync(`${appName}/forms.py`, "utf8")
         console.log()
         if((new RegExp(`from \.models import ${modelName}`)).test(formFileContent)) {
-            let classRegExp = new RegExp(`(class ${modelName}Form\\(forms.ModelForm\\):(.|\\s)*${modelName}\\s*fields\\s*=\\s*\\[.*\\])`)
-            
-            formFileContent.replace(classRegExp, newContent)
+            let classRegExp = new RegExp(`class ${modelName}Form\\(forms.ModelForm\\):(?:.|\\s)*${modelName}\\s*fields\\s*=\\s*\\[.*\\]`)
+            formFileContent= formFileContent.replace(classRegExp, newContent)
             fs.writeFileSync(`${appName}/forms.py`, formFileContent)
         }
         else {
