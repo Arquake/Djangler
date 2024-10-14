@@ -4,6 +4,7 @@ import ConsoleLogs from "../../console-logs/ConsoleLogs.js";
 import chalk from "chalk";
 import fs from "fs";
 import path from "path";
+import {dirname} from "../../dirname.js";
 
 export default class CreateModel {
 
@@ -59,6 +60,7 @@ export default class CreateModel {
             }
             else {
                 newContent = fileContent + `\n\nclass ${modelName}(models.Model):` + "\n"+fieldItems
+                this.generateFormFiles(appName, modelName)
             }
 
             fs.writeFileSync( `${appName}/models.py`, newContent)
@@ -68,6 +70,7 @@ export default class CreateModel {
             ConsoleLogs.showSuccessMessages(["Model updated successfully!", "Run 'dja m migrate' to migrate the changes"])
         }
         catch (error) {
+            console.log(chalk.red(error.message));
             ConsoleLogs.showErrorMessage("No model inside the selected directory!");
         }
     }
@@ -82,7 +85,8 @@ export default class CreateModel {
             if (command.length > 0) {
                 for (let i = 0; i < command.length; i++) {
                     if ((/^--[a-zA-Z]+$/g).test(command[0])) {
-                        return command[0].replace("--", "");
+                        let newName = command[0].replace("--", "")
+                        return newName.toLowerCase().charAt(0).toUpperCase() + newName.toLowerCase().slice(1);
                     }
                 }
             }
@@ -473,12 +477,16 @@ export default class CreateModel {
         return classNames
     }
 
+    /**
+     * generate the form for the model
+     * @param appName the app name
+     * @param modelName the model name
+     */
     static generateForm(appName, modelName) {
         let fileContent = fs.readFileSync(`${appName}/models.py`, "utf8");
         const regexGetClass = new RegExp(`class\\s+${modelName}\\s*\\s*([\\s\\S]*?)(?=\\n\\S|$)\\s*pass`, 'gm');
         let modelContent = fileContent.match(regexGetClass)[0]
         let allVariables = modelContent.match(/\s*([a-zA-Z]+)\s*=\s*models\.\w+(.*)/g)
-        console.log(allVariables)
         for (let i = 0; i < allVariables.length; i++) {
             allVariables[i] = allVariables[i].match(/(\w+)\s*=/)[1];
         }
@@ -500,7 +508,6 @@ export default class CreateModel {
         newContent += ']'
 
         let formFileContent = fs.readFileSync(`${appName}/forms.py`, "utf8")
-        console.log()
         if((new RegExp(`from \.models import ${modelName}`)).test(formFileContent)) {
             let classRegExp = new RegExp(`class ${modelName}Form\\(forms.ModelForm\\):(?:.|\\s)*${modelName}\\s*fields\\s*=\\s*\\[.*\\]`)
             formFileContent= formFileContent.replace(classRegExp, newContent)
@@ -511,5 +518,41 @@ export default class CreateModel {
             fs.writeFileSync(`${appName}/forms.py`, formFileContent)
         }
 
+    }
+
+    static generateFormFiles(appName, modelName) {
+
+        const modelNameAllLowerCase = modelName.toLowerCase();
+
+        fs.mkdirSync(`${appName}/Templates/${modelName}`)
+
+        let createTemplate = fs.readFileSync(dirname+"/template-files/form-templates/front/CreateTemplate.txt", "utf-8");
+        let editTemplate = fs.readFileSync(dirname+"/template-files/form-templates/front/EditTemplate.txt", "utf-8");
+        let listTemplate = fs.readFileSync(dirname+"/template-files/form-templates/front/ListTemplate.txt", "utf-8");
+        let showTemplate = fs.readFileSync(dirname+"/template-files/form-templates/front/ShowTemplate.txt", "utf-8");
+
+        createTemplate = (createTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+        editTemplate = (editTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+        listTemplate = (listTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+        showTemplate = (showTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+
+        fs.writeFileSync(`${appName}/Templates/${modelName}/create.${modelNameAllLowerCase}.html`, createTemplate);
+        fs.writeFileSync(`${appName}/Templates/${modelName}/edit.${modelNameAllLowerCase}.html`, editTemplate);
+        fs.writeFileSync(`${appName}/Templates/${modelName}/index.${modelNameAllLowerCase}.html`, listTemplate);
+        fs.writeFileSync(`${appName}/Templates/${modelName}/show.${modelNameAllLowerCase}.html`, showTemplate);
+
+        let newUrls = fs.readFileSync(dirname+"/template-files/form-templates/back/NewUrls.txt", "utf-8");
+
+        newUrls = (newUrls.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+
+        let newContentUrls = (fs.readFileSync(`${appName}/urls.py`, "utf-8")).replace(/](?![^\[]*\])/, newUrls) + "\n]";
+        fs.writeFileSync(`${appName}/urls.py`, newContentUrls);
+
+        let newViews = fs.readFileSync(dirname+"/template-files/form-templates/back/NewViews.txt", "utf-8");
+        newViews = (newViews.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+
+        const oldViewData = fs.readFileSync(`${appName}/views.py`, "utf-8")
+        const newViewData = `from .models import ${modelName}\nfrom .forms import ${modelName}Form\n` + oldViewData + '\n\n' + newViews;
+        fs.writeFileSync(`${appName}/views.py`, newViewData)
     }
 }

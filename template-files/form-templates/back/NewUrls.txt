@@ -1,0 +1,5 @@
+path('{%ModelNameLowerCase%}/create', views.{%ModelNameLowerCase%}create, name="{%ModelNameLowerCase%}_create"),
+path('{%ModelNameLowerCase%}', views.{%ModelNameLowerCase%}list, name="{%ModelNameLowerCase%}_list"),
+path('{%ModelNameLowerCase%}/show/<int:id>', views.{%ModelNameLowerCase%}show, name="{%ModelNameLowerCase%}_show"),
+path('{%ModelNameLowerCase%}/edit/<int:id>', views.{%ModelNameLowerCase%}edit, name="{%ModelNameLowerCase%}_edit"),
+path('{%ModelNameLowerCase%}/delete/<int:id>', views.{%ModelNameLowerCase%}delete, name="{%ModelNameLowerCase%}_delete"),

@@ -1,0 +1,59 @@
+def {%ModelNameLowerCase%}create(request):
+    form = {%ModelName%}Form()
+    if (request.method == "POST"):
+        form = {%ModelName%}Form(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('{%ModelNameLowerCase%}_list')
+    return render(
+        request,
+        "{%ModelName%}/create.{%ModelNameLowerCase%}.html",
+        {
+            'form': form
+        }
+    )
+
+def {%ModelNameLowerCase%}list(request):
+    {%ModelNameLowerCase%}s = {%ModelName%}.objects.all()
+    return render(
+        request,
+        "{%ModelName%}/index.{%ModelNameLowerCase%}.html",
+        {
+            '{%ModelNameLowerCase%}s': {%ModelNameLowerCase%}s.values()
+        }
+    )
+
+def {%ModelNameLowerCase%}show(request, id=None):
+    {%ModelNameLowerCase%} = {%ModelName%}.objects.get(id=id)
+    return render(
+        request,
+        "{%ModelName%}/show.{%ModelNameLowerCase%}.html",
+        {
+            '{%ModelNameLowerCase%}': {%ModelNameLowerCase%}
+        }
+    )
+
+def {%ModelNameLowerCase%}edit(request, id=None):
+    {%ModelNameLowerCase%} = {%ModelName%}.objects.get(id=id)
+    if (request.method == "POST"):
+        form={%ModelName%}Form(request.POST,instance={%ModelNameLowerCase%})
+        if(form.is_valid()):
+            form.save()
+            return redirect('{%ModelNameLowerCase%}_show', id)
+    else:
+        form = {%ModelName%}Form(instance={%ModelNameLowerCase%})
+
+    return render(
+        request,
+        "{%ModelName%}/edit.{%ModelNameLowerCase%}.html",
+        {
+            'form': form,
+            '{%ModelNameLowerCase%}': {%ModelNameLowerCase%}
+        }
+    )
+
+def {%ModelNameLowerCase%}delete(request, id=None):
+    if (request.method == "POST"):
+        {%ModelNameLowerCase%} = {%ModelName%}.objects.get(id=id)
+        {%ModelNameLowerCase%}.delete()
+    return redirect('{%ModelNameLowerCase%}_list')

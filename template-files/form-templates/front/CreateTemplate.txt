@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %} {%ModelName%} create {% endblock %}
+
+{% block content %}
+
+    <main style="min-height: 100vh;" class="container">
+        <div style="padding-top: 8rem; position: relative; display: flex; align-items: center; justify-content: center;">
+            <h1 style="position: relative; text-align: center;">
+                Creating a new {%ModelName%} :
+            </h1>
+        </div>
+        <form action="{% url '{%ModelNameLowerCase%}_create' %}" method="post">
+            {{ form }}
+            {% csrf_token %}
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+
+{% endblock %}

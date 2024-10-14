@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} {%ModelName%} edit {% endblock %}
+
+{% block content %}
+
+    <main style="min-height: 100vh;" class="container">
+        <form action="{% url '{%ModelNameLowerCase%}_edit' {%ModelNameLowerCase%}.id %}" method="post">
+            {{ form }}
+            {% csrf_token %}
+            <button type="submit">Apply changes</button>
+        </form>
+    </main>
+
+{% endblock %}
