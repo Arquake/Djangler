@@ -5,17 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/template-files/form-templates/back/NewUrls.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/form-templates/back/NewViews.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/form-templates/front/CreateTemplate.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/form-templates/front/EditTemplate.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/form-templates/front/ListTemplate.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/form-templates/front/ShowTemplate.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/CreateApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CreateApp.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/template-files/BareboneViews.txt" beforeDir="false" afterPath="$PROJECT_DIR$/template-files/BareboneViews.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="47191" />
+    <option name="totalTimeSeconds" value="47328" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">

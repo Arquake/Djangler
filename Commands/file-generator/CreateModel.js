@@ -5,6 +5,7 @@ import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 import {dirname} from "../../dirname.js";
+import {createSpinner} from "nanospinner";
 
 export default class CreateModel {
 
@@ -524,6 +525,8 @@ export default class CreateModel {
 
         const modelNameAllLowerCase = modelName.toLowerCase();
 
+        let spinner = createSpinner(' Creating templates').start();
+
         fs.mkdirSync(`${appName}/Templates/${modelName}`)
 
         let createTemplate = fs.readFileSync(dirname+"/template-files/form-templates/front/CreateTemplate.txt", "utf-8");
@@ -541,6 +544,10 @@ export default class CreateModel {
         fs.writeFileSync(`${appName}/Templates/${modelName}/index.${modelNameAllLowerCase}.html`, listTemplate);
         fs.writeFileSync(`${appName}/Templates/${modelName}/show.${modelNameAllLowerCase}.html`, showTemplate);
 
+        spinner.success({text: ` Templates created successfully !`})
+
+        spinner = createSpinner(' Generating urls').start();
+
         let newUrls = fs.readFileSync(dirname+"/template-files/form-templates/back/NewUrls.txt", "utf-8");
 
         newUrls = (newUrls.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
@@ -548,11 +555,17 @@ export default class CreateModel {
         let newContentUrls = (fs.readFileSync(`${appName}/urls.py`, "utf-8")).replace(/](?![^\[]*\])/, newUrls) + "\n]";
         fs.writeFileSync(`${appName}/urls.py`, newContentUrls);
 
+        spinner.success({text: ` Urls generated successfully !`})
+
+        spinner = createSpinner(' Generating views').start();
+
         let newViews = fs.readFileSync(dirname+"/template-files/form-templates/back/NewViews.txt", "utf-8");
         newViews = (newViews.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
 
         const oldViewData = fs.readFileSync(`${appName}/views.py`, "utf-8")
         const newViewData = `from .models import ${modelName}\nfrom .forms import ${modelName}Form\n` + oldViewData + '\n\n' + newViews;
         fs.writeFileSync(`${appName}/views.py`, newViewData)
+
+        spinner.success({text: ` Views generated successfully !`})
     }
 }
