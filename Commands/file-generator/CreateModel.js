@@ -15,9 +15,19 @@ export default class CreateModel {
      */
     static async handleCommand(command) {
         try {
-            const appName = await this.getAppName(command)
 
-            const modelName = await this.makeNewModel(command)
+            const parameters = this.getParameters(command)
+
+            const appNameParameter = parameters.appName
+            const modelNameParameter = parameters.modelName
+            const fileCreationParameter = parameters.fileCreation
+            const errorParameter = parameters.error
+
+            if (errorParameter) {return}
+
+            const appName = await this.getAppName(appNameParameter)
+
+            const modelName = await this.makeNewModel(modelNameParameter)
 
             const modelFile = path.join(process.cwd(), `${appName}/models.py`);
 
@@ -65,7 +75,9 @@ export default class CreateModel {
             }
             else {
                 newContent = fileContent + `\n\nclass ${modelName}(models.Model):` + "\n"+fieldItems
-                this.generateFormFiles(appName, modelName, fieldNames)
+                if (fileCreationParameter) {
+                    this.generateFormFiles(appName, modelName, fieldNames)
+                }
             }
 
             fs.writeFileSync( `${appName}/models.py`, newContent)
@@ -75,25 +87,20 @@ export default class CreateModel {
             ConsoleLogs.showSuccessMessages(["Model updated successfully!", "Run 'dja m migrate' to migrate the changes"])
         }
         catch (error) {
-            console.log(chalk.red(error.message));
+            ConsoleLogs.showErrorMessage(error)
             ConsoleLogs.showErrorMessage("No model inside the selected directory!");
         }
     }
 
     /**
      * generate the model name
-     * @param command the command the user gave
+     * @param modelName the model name the user gave
      * @return {Promise<*|string>} the model's name
      */
-    static async makeNewModel(command) {
+    static async makeNewModel(modelName) {
         try {
-            if (command.length > 0) {
-                for (let i = 0; i < command.length; i++) {
-                    if ((/^--[a-zA-Z]+$/g).test(command[0])) {
-                        let newName = command[0].replace("--", "")
-                        return newName.toLowerCase().charAt(0).toUpperCase() + newName.toLowerCase().slice(1);
-                    }
-                }
+            if (modelName !=="") {
+                return modelName.charAt(0).toUpperCase() + modelName.toLowerCase().slice(1);
             }
             return await this.askModelName();
         }
@@ -380,17 +387,13 @@ export default class CreateModel {
      * get the app name
      * if a flag like '-name' is found return the name
      * otherwise ask for the name
-     * @param command the command given by the user
+     * @param givenAppName the app name given by the user
      * @return {Promise<*|string>} the app name
      */
-    static async getAppName(command) {
+    static async getAppName(givenAppName) {
         try {
-            if (command.length > 0) {
-                for (let i = 0; i < command.length; i++) {
-                    if ((/^-[a-zA-Z]+$/g).test(command[i])) {
-                        return command[i].replace("-", "");
-                    }
-                }
+            if (givenAppName !== "") {
+                return givenAppName
             }
             return await this.askAppName();
         }
@@ -525,6 +528,12 @@ export default class CreateModel {
 
     }
 
+    /**
+     * generates all the forms for an out of the box uses
+     * @param appName app name
+     * @param modelName model name
+     * @param fields app fields
+     */
     static generateFormFiles(appName, modelName, fields) {
 
         const modelNameAllLowerCase = modelName.toLowerCase();
@@ -581,5 +590,30 @@ export default class CreateModel {
         fs.writeFileSync(`${appName}/views.py`, newViewData)
 
         spinner.success({text: ` Views generated successfully !`})
+    }
+
+
+    static getParameters(command) {
+        const appNameRegExp = (/^-[a-zA-Z]+$/g)
+        const modelNameRegExp = (/^--[a-zA-Z]+$/g)
+        const fileCreation = (/^---mf$/g)
+        let parameters = {appName: "", modelName: "", fileCreation: false, error: false}
+        for (let i = 0; i < command.length; i++) {
+            if (appNameRegExp.test(command[i]) && parameters.appName === "") {
+                parameters = {...parameters, appName: command[i].replace("-", "")};
+            }
+            else if (modelNameRegExp.test(command[i]) && parameters.modelName === "") {
+                parameters = {...parameters, modelName: command[i].replace("--", "")};
+            }
+            else if (fileCreation.test(command[i]) && !parameters.fileCreation) {
+                parameters = {...parameters, fileCreation: true};
+            }
+            else {
+                console.log(chalk.red(`${command[i]} flag does not exist or already in. Execute dja help for help`))
+                return {...parameters, error: true}
+            }
+        }
+
+        return parameters;
     }
 }

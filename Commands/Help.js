@@ -10,10 +10,14 @@ const commandList = {
         '\t--command_name : help on the given command name',
     new: 'new : ask you the name of the new project and generate it',
     s: 's : run a local dev server',
-    g: 'g type -optional_flags --component_name : generate a new component\n' +
+    g: 'g {type} : generate a new component\n' +
+        '\t{type} :\n' +
         '\ta : generate a new app\n' +
+        '\t\t-app_name : The application name\n' +
         '\tm : generate a new model\n' +
-        '\t\t-app_name : The application in which you want to modify models',
+        '\t\t-app_name : The application in which you want to modify models\n' +
+        '\t\t--model_name : The model name to create or update\n' +
+        '\t\t---mf : If it has to create forms and routing for the model',
     m: 'm : migrations commands\n' +
         '\tmigrate : make a migration for the project\n' +
         '\tapply : apply migrations to the database'
