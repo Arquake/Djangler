@@ -35,13 +35,17 @@ export default class CreateModel {
             }
 
             let fields = []
+            let fieldNames = []
 
             let newField = ""
+            let fieldName = ""
 
             while (true) {
                 try {
-                    newField = await this.makeNewField(appName, modelName);
-                    fields.push(newField)
+                    fieldName = await this.askFieldName();
+                    newField = await this.makeNewField(appName, modelName, fieldName);
+                    fields= [...fields, newField]
+                    fieldNames = [...fieldNames, fieldName]
                 }
                 catch (error) {
                     break;
@@ -61,7 +65,7 @@ export default class CreateModel {
             }
             else {
                 newContent = fileContent + `\n\nclass ${modelName}(models.Model):` + "\n"+fieldItems
-                this.generateFormFiles(appName, modelName)
+                this.generateFormFiles(appName, modelName, fieldNames)
             }
 
             fs.writeFileSync( `${appName}/models.py`, newContent)
@@ -215,10 +219,10 @@ export default class CreateModel {
      * create a field
      * @param appName the app name
      * @param modelName the model name
+     * @param fieldName the field name
      * @return {Promise<string>} the code to make the field
      */
-    static async makeNewField(appName, modelName) {
-        let name = await this.askFieldName();
+    static async makeNewField(appName, modelName, fieldName) {
         let type = await this.askFieldsType();
         let parameters = ""
         switch (type) {
@@ -247,7 +251,7 @@ export default class CreateModel {
         }
         let nullable = await this.askIsNullable()
 
-        return `${name} = models.${type}(${parameters}${parameters.length>0 || nullable?', ':''}blank=False${nullable?', null=True':''})`
+        return `${fieldName} = models.${type}(${parameters}${parameters.length>0 || nullable?', ':''}blank=False${nullable?', null=True':''})`
 
     }
 
@@ -521,7 +525,7 @@ export default class CreateModel {
 
     }
 
-    static generateFormFiles(appName, modelName) {
+    static generateFormFiles(appName, modelName, fields) {
 
         const modelNameAllLowerCase = modelName.toLowerCase();
 
@@ -537,11 +541,21 @@ export default class CreateModel {
         createTemplate = (createTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
         editTemplate = (editTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
         listTemplate = (listTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
-        showTemplate = (showTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName);
+
 
         fs.writeFileSync(`${appName}/Templates/${modelName}/create.${modelNameAllLowerCase}.html`, createTemplate);
         fs.writeFileSync(`${appName}/Templates/${modelName}/edit.${modelNameAllLowerCase}.html`, editTemplate);
         fs.writeFileSync(`${appName}/Templates/${modelName}/index.${modelNameAllLowerCase}.html`, listTemplate);
+
+        let modelProperties = "<div>"
+
+        for (let i = 0; i < fields.length; i++) {
+            modelProperties += `<p>${fields[i]} : {{ ${modelNameAllLowerCase}.${fields[i]} }}</p>`;
+        }
+
+        modelProperties += "</div>"
+
+        showTemplate = ((showTemplate.replaceAll('{%ModelNameLowerCase%}', modelNameAllLowerCase)).replaceAll('{%ModelName%}', modelName)).replaceAll('{%ModelProperties%}', modelProperties);
         fs.writeFileSync(`${appName}/Templates/${modelName}/show.${modelNameAllLowerCase}.html`, showTemplate);
 
         spinner.success({text: ` Templates created successfully !`})
