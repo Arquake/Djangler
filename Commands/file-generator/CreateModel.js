@@ -594,7 +594,7 @@ export default class CreateModel {
 
 
     static getParameters(command) {
-        const appNameRegExp = (/^-[a-zA-Z]+$/g)
+        const appNameRegExp = (/^-[a-zA-Z_]+$/g)
         const modelNameRegExp = (/^--[a-zA-Z]+$/g)
         const fileCreation = (/^---mf$/g)
         let parameters = {appName: "", modelName: "", fileCreation: false, error: false}

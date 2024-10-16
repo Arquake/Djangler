@@ -83,8 +83,8 @@ export default class CreateApp {
      */
     static async getName(command) {
         for (let i = 0; i < command.length; i++) {
-            if ((/--.+/g).test(command[i])) {
-                return command[i].replace("--", "")
+            if ((/--[a-zA-Z_]+/g).test(command[i])) {
+                return (command[i].replace("--", "")).toLowerCase()
             }
         }
         return await this.askName()
