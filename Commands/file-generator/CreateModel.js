@@ -258,7 +258,7 @@ export default class CreateModel {
         }
         let nullable = await this.askIsNullable()
 
-        return `${fieldName} = models.${type}(${parameters}${parameters.length>0 || nullable?', ':''}blank=False${nullable?', null=True':''})`
+        return `${fieldName} = models.${type}(${parameters}${parameters.length>0?', ':''}blank=False${nullable?', null=True':''})`
 
     }
 
