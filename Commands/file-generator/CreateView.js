@@ -63,7 +63,15 @@ export default class CreateView {
             return
         }
 
-        const addedContent = fs.readFileSync(`${appName}/views.py`, "utf8");
+        let addedContent = fs.readFileSync(dirname+`template-files/BareboneViewFunction.txt`, "utf8");
+        addedContent = addedContent.replace('{%ViewName%}', viewName.toLowerCase());
+        addedContent = addedContent.replace('{%ViewNameCapitalize%}', viewName);
+
+        fs.appendFileSync(`${appName}/views.py`, '\n\n'+addedContent);
+
+        const htmlTemplate = fs.readFileSync(dirname+`template-files/BareboneTemplate.txt`, "utf8");
+
+        fs.writeFileSync(`${appName}/Templates/${viewName.toLowerCase()}.html`, htmlTemplate);
     }
 
     /**

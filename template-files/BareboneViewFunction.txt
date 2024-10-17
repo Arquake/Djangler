@@ -1,0 +1,8 @@
+def {%ViewName%}(request):
+    return render(
+        request,
+        "{%ViewNameCapitalize%}/{%ViewName%}.html",
+        {
+            'view_name': "{%ViewName%}_view"
+        }
+    )
