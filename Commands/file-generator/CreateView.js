@@ -51,46 +51,92 @@ export default class CreateView {
     }
 
     /**
-     * create the Controller
-     * Create a directory named /Controllers if it does not exist
-     * Create a Controller with the first letter set to an uppercase and Controller.js at the end
-     * @param controllerName the controller name
+     * create a new view in the selected app
+     * @param appName the app name
+     * @param viewName the view name
      */
-    static createView(controllerName) {
+    static createView(appName, viewName) {
+        let viewContent = fs.readFileSync(`${appName}/views.py`, "utf8");
 
-        const currentDir = process.cwd();
-
-        controllerName = controllerName.charAt(0).toUpperCase() + controllerName.slice(1)
-
-        if (!fs.existsSync(`${currentDir}/Controllers`)) {
-            // If it doesn't exist, create the directory
-            fs.mkdirSync(`${currentDir}/Controllers`);
+        if (new RegExp(`def ${viewName.toLowerCase()}`, "").test(viewContent)) {
+            ConsoleLogs.showErrorMessage("View already exist");
+            return
         }
 
-        if(!fs.existsSync(`${currentDir}/Controllers/${controllerName}Controller.ts`)) {
+        const addedContent = fs.readFileSync(`${appName}/views.py`, "utf8");
+    }
 
-            const fileContent = this.getControllerContent(controllerName);
-            // If it doesn't exist, create the file
-            fs.writeFileSync(`${currentDir}/Controllers/${controllerName}Controller.ts`, fileContent);
-        } else {
-            throw new FileAlreadyExistError();
+    /**
+     * ask the user for the view's name
+     * @return {Promise<*|string>} the name the user gave
+     * @throws InvalidInputError if the user did not use a valid name
+     */
+    static async askViewName() {
+        const answer = await inquirer.prompt({
+            name: 'view_name',
+            type: 'input',
+            message: 'What is the View name?',
+            default() {
+                return "";
+            },
+        })
+
+        if (answer.view_name === "") {
+            throw new InvalidInputError();
+        }
+
+        if((/^[a-zA-Z]+$/).test(answer.view_name)) {
+            return answer.view_name.toLowerCase().charAt(0).toUpperCase() + answer.view_name.toLowerCase().slice(1)
+        }
+
+        ConsoleLogs.showErrorMessages([
+            "Invalid view name!",
+            "Names must be only alphanumeric characters.",
+        ])
+
+        return await this.askViewName();
+    }
+
+    /**
+     * get the app name
+     * if a flag like '-name' is found return the name
+     * otherwise ask for the name
+     * @param givenAppName the app name given by the user
+     * @return {Promise<*|string>} the app name
+     */
+    static async getAppName(givenAppName) {
+        try {
+            if (givenAppName !== "") {
+                return givenAppName
+            }
+            return await this.askAppName();
+        }
+        catch (error) {
+            throw error
         }
     }
 
     /**
-     * generate a string that contains what the Controller should have inside it
-     * @param controllerName the controller name
-     * @return {string} the controller code
+     * ask the user what is the application name
+     * @return {Promise<string>} the application name
+     * @throws Error if there's no application directory
      */
-    static getControllerContent(controllerName) {
-        const templateFilePath = path.join(dirname, './template-files/BareboneUrls.txt');
+    static async askAppName(){
+        const directoryList = fs.readdirSync(process.cwd()).filter((name) => {
+            return fs.statSync(path.join(process.cwd(), name)).isDirectory() && !name.startsWith('.') && fs.existsSync(path.join(path.join(process.cwd(), name), 'models.py'));
+        });
 
-        // Read the template file
-        const templateContent = fs.readFileSync(templateFilePath, 'utf8');
+        if(directoryList.length === 0){
+            throw new Error("No Directory Found");
+        }
 
-        // Replace placeholders with the actual controller name and path
-        return templateContent
-            .replace(/{%ControllerName%}/g, controllerName+"Controller")
-            .replace(/{%path%}/g, controllerName.toLowerCase());
+        let res = await inquirer.prompt({
+            name: 'app_name',
+            type: 'list',
+            message: 'What is the application name?',
+            choices: directoryList
+        })
+
+        return res.app_name
     }
 }

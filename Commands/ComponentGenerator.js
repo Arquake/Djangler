@@ -20,7 +20,7 @@ export default class ComponentGenerator {
                 name: 'type',
                 type: 'list',
                 message: 'What do you want to create?',
-                choices: ["application","model"]
+                choices: ["application","model","view"]
             })
 
             let choiceAbreviation = ""
@@ -31,6 +31,9 @@ export default class ComponentGenerator {
                     break;
                 case "model":
                     choiceAbreviation = "m"
+                    break;
+                case "view":
+                    choiceAbreviation = "v"
                     break;
                 default:
                     break;
@@ -50,9 +53,10 @@ export default class ComponentGenerator {
             case 'a':
                 await CreateUnderApp.handleCommand(command.slice(1));
                 break;
-            /*case 'v':
+            // Handle view creation commands
+            case 'v':
                 await CreateView.handleCommand(command.slice(1))
-                break;*/
+                break;
             // Handle model creation commands
             case 'm':
                 await CreateModel.handleCommand(command.slice(1));
