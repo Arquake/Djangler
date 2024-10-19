@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="61266" />
+    <option name="totalTimeSeconds" value="61630" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -84,7 +83,7 @@
       <workItem from="1729066613195" duration="90000" />
       <workItem from="1729173347084" duration="2673000" />
       <workItem from="1729346145859" duration="4000" />
-      <workItem from="1729346213503" duration="17722000" />
+      <workItem from="1729346213503" duration="18326000" />
     </task>
     <servers />
   </component>
