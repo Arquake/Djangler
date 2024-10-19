@@ -20,7 +20,6 @@ export default class CreateModel {
 
             const appNameParameter = parameters.appName
             const modelNameParameter = parameters.modelName
-            const fileCreationParameter = parameters.fileCreation
             const errorParameter = parameters.error
 
             if (errorParameter) {return}
@@ -28,6 +27,8 @@ export default class CreateModel {
             const appName = await this.getAppName(appNameParameter)
 
             const modelName = await this.makeNewModel(modelNameParameter)
+
+            const fileCreationParameter = await this.getFileCreation(parameters.fileCreation)
 
             const modelFile = path.join(process.cwd(), `${appName}/models.py`);
 
@@ -53,13 +54,21 @@ export default class CreateModel {
             while (true) {
                 try {
                     fieldName = await this.askFieldName();
+                    if (fieldName === "") {
+                        break;
+                    }
                     newField = await this.makeNewField(appName, modelName, fieldName);
                     fields= [...fields, newField]
                     fieldNames = [...fieldNames, fieldName]
                 }
-                catch (error) {
-                    break;
+                catch (_) {
+                    return
                 }
+            }
+
+            if(fieldNames.length === 0) {
+                ConsoleLogs.showErrorMessage("No field entered");
+                return
             }
 
             let fieldItems = ""
@@ -125,11 +134,7 @@ export default class CreateModel {
             },
         })
 
-        if (answer.field_name === "") {
-            throw new InvalidInputError();
-        }
-
-        if (answer.field_name.match(/^[A-Za-z]+$/g)) {
+        if (answer.field_name === "" || answer.field_name.match(/^[A-Za-z]+$/g)) {
             return answer.field_name.toLowerCase();
         }
 
@@ -592,7 +597,11 @@ export default class CreateModel {
         spinner.success({text: ` Views generated successfully !`})
     }
 
-
+    /**
+     * take parameters and returns an object filled with the values
+     * @param command the flags given by the user
+     * @return {{modelName: string, appName: string, fileCreation: boolean, error: boolean}} the model name, the app name, if the user want to create forms along with the model, if an error was encountered
+     */
     static getParameters(command) {
         const appNameRegExp = (/^-[a-zA-Z_]+$/g)
         const modelNameRegExp = (/^--[a-zA-Z]+$/g)
@@ -615,5 +624,28 @@ export default class CreateModel {
         }
 
         return parameters;
+    }
+
+    static async getFileCreation(fileCreation) {
+        try {
+            if (fileCreation) {
+                return true
+            }
+            return await this.askFileCreation();
+        }
+        catch (error) {
+            throw error
+        }
+    }
+
+    static async askFileCreation(){
+        let res = await inquirer.prompt({
+            name: 'choice',
+            type: 'list',
+            message: 'Do you want to create default pages for the model?',
+            choices: ['no','yes']
+        })
+
+        return res.choice==="yes"
     }
 }

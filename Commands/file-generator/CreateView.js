@@ -1,53 +1,48 @@
 import inquirer from "inquirer";
 import fs from "fs";
 import InvalidInputError from "../../Errors/InvalidInputError.js";
-import FileAlreadyExistError from "../../Errors/FileAlreadyExistError.js";
 import ConsoleLogs from "../../console-logs/ConsoleLogs.js";
 import * as path from "node:path";
 import {dirname} from "../../dirname.js";
+import chalk from "chalk";
+import {createSpinner} from "nanospinner";
 
 export default class CreateView {
-    static async handleCommand(command) {
-        let controllerName = "";
-        if (command.length > 0) {
-            if ((/--[a-zA-Z-]*/g).test(command[0])) {
-                controllerName = command[0].replace("--", "");
-                await this.createView(controllerName);
-            }
-            else {
-                ConsoleLogs.showErrorMessage("Parameters given don't exist");
-            }
-        }
-        else {
-            controllerName = await this.askName();
-            await this.createView(controllerName);
-        }
-
-        controllerName = controllerName.charAt(0).toUpperCase() + controllerName.slice(1);
-        const successMessage = controllerName + " View generated with success !"
-        ConsoleLogs.showSuccessMessage(successMessage);
-    }
 
     /**
-     * ask for the name of the controller
-     * @return {Promise<string>} the name entered by the user
-     * @throws InvalidInputError if the user input is invalid
+     * handle the view creating command
+     * @param command the command the user gave
      */
-    static async askName() {
-        const controllerAnswers = await inquirer.prompt({
-            name: 'view_name',
-            type: 'input',
-            message: 'What is the View name?',
-            default() {
-                return "";
-            },
-        })
+    static async handleCommand(command) {
+        const parameters = this.getParameters(command)
 
-        if (controllerAnswers.view_name === "") {
-            throw new InvalidInputError();
+        if (parameters.error) {
+            return;
         }
 
-        return controllerAnswers.view_name;
+        const appName = await this.getAppName(parameters.appName);
+
+        const viewName = await this.askViewName(parameters.viewName);
+
+        let spinner = createSpinner(' Creating view').start();
+
+        try {
+            this.createView(appName, viewName)
+            spinner.success();
+
+            spinner = createSpinner(' Generating routing').start();
+            this.routeView(appName, viewName)
+            spinner.success();
+
+            spinner = createSpinner(' Generating template').start();
+            this.generateTemplateView(appName, viewName)
+            spinner.success();
+
+            ConsoleLogs.showSuccessMessage(viewName + " View generated with success !");
+        }
+        catch (_) {
+            spinner.error();
+        }
     }
 
     /**
@@ -58,20 +53,16 @@ export default class CreateView {
     static createView(appName, viewName) {
         let viewContent = fs.readFileSync(`${appName}/views.py`, "utf8");
 
-        if (new RegExp(`def ${viewName.toLowerCase()}`, "").test(viewContent)) {
+        if (new RegExp(`def\\s+${viewName.toLowerCase()}(?:\\s|\\(.*\\)):`, "").test(viewContent)) {
             ConsoleLogs.showErrorMessage("View already exist");
-            return
+            throw new Error("View already exist");
         }
 
-        let addedContent = fs.readFileSync(dirname+`template-files/BareboneViewFunction.txt`, "utf8");
-        addedContent = addedContent.replace('{%ViewName%}', viewName.toLowerCase());
-        addedContent = addedContent.replace('{%ViewNameCapitalize%}', viewName);
+        let addedContent = fs.readFileSync(dirname+`/template-files/BareboneViewFunction.txt`, "utf8");
+        addedContent = addedContent.replaceAll('{%ViewName%}', viewName.toLowerCase());
+        addedContent = addedContent.replaceAll('{%ViewNameCapitalize%}', viewName);
 
         fs.appendFileSync(`${appName}/views.py`, '\n\n'+addedContent);
-
-        const htmlTemplate = fs.readFileSync(dirname+`template-files/BareboneTemplate.txt`, "utf8");
-
-        fs.writeFileSync(`${appName}/Templates/${viewName.toLowerCase()}.html`, htmlTemplate);
     }
 
     /**
@@ -79,7 +70,12 @@ export default class CreateView {
      * @return {Promise<*|string>} the name the user gave
      * @throws InvalidInputError if the user did not use a valid name
      */
-    static async askViewName() {
+    static async askViewName(viewName) {
+
+        if (viewName !== "") {
+            return viewName.charAt(0).toUpperCase() + viewName.toLowerCase().slice(1);
+        }
+
         const answer = await inquirer.prompt({
             name: 'view_name',
             type: 'input',
@@ -146,5 +142,56 @@ export default class CreateView {
         })
 
         return res.app_name
+    }
+
+    /**
+     * handle what parameters are used
+     * @param command the command the user wrote
+     * @return {{viewName: string, appName: string, error: boolean}} the viewName, the appName, if an error occurred
+     */
+    static getParameters(command) {
+        const appNameRegExp = (/^-[a-zA-Z_]+$/g)
+        const viewNameRegExp = (/^--[a-zA-Z]+$/g)
+        let parameters = {appName: "", viewName: "", error: false}
+        for (let i = 0; i < command.length; i++) {
+            if (appNameRegExp.test(command[i]) && parameters.appName === "") {
+                parameters = {...parameters, appName: command[i].replace("-", "")};
+            }
+            else if (viewNameRegExp.test(command[i]) && parameters.viewName === "") {
+                parameters = {...parameters, viewName: command[i].replace("--", "")};
+            }
+            else {
+                console.log(chalk.red(`${command[i]} flag does not exist or already in. Execute dja help for help`))
+                return {...parameters, error: true}
+            }
+        }
+
+        return parameters;
+    }
+
+    /**
+     * generate the routing for the view
+     * @param appName the app name
+     * @param viewName the view name
+     */
+    static routeView(appName, viewName) {
+        let currentUrls = fs.readFileSync(`${appName}/urls.py`, 'utf8');
+
+        currentUrls = currentUrls.replace(']', `\tpath("${viewName.toLowerCase()}", views.${viewName.toLowerCase()}, name="${viewName.toLowerCase()}"),\n]`);
+
+        fs.writeFileSync(`${appName}/urls.py`, currentUrls);
+    }
+
+    /**
+     * generate templates for the view
+     * @param appName the app name
+     * @param viewName the view name
+     */
+    static generateTemplateView(appName, viewName) {
+        let template = fs.readFileSync(dirname+`/template-files/BareboneTemplate.txt`, 'utf8');
+
+        fs.mkdirSync(`${appName}/Templates/${viewName}`)
+
+        fs.writeFileSync(`${appName}/Templates/${viewName}/${viewName.toLowerCase()}.html`, template);
     }
 }
