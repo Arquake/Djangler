@@ -28,20 +28,29 @@ export default class CreateModel {
 
             const modelName = await this.makeNewModel(modelNameParameter)
 
-            const fileCreationParameter = await this.getFileCreation(parameters.fileCreation)
-
             const modelFile = path.join(process.cwd(), `${appName}/models.py`);
 
             let fileContent = fs.readFileSync(modelFile, "utf8");
 
             let modelContent = ""
 
+            let isNewModel = true
+
+            let fileCreationParameter = false
+
+            let modelNamesInUse = []
+
             if ((new RegExp('\\bclass\\s+'+modelName+'\\s*', 'g')).test(fileContent)) {
+                if (parameters.fileCreation) {console.log(chalk.yellow('\nParameter ---mf ignored because the model already exist\n'))}
+                isNewModel = false
                 const regexGetClass = new RegExp(`class\\s+${modelName}\\s*\\s*([\\s\\S]*?)(?=\\n\\S|$)\\s*pass`, 'gm');
                 modelContent = fileContent.match(regexGetClass)[0]
                 ConsoleLogs.showSuccessMessages([`Model Already exist`,`Now editing the ${modelName} model`])
+                modelNamesInUse = this.getAllFieldNameOfModel(appName, modelName)
             }
             else {
+                fileCreationParameter = await this.getFileCreation(parameters.fileCreation)
+
                 ConsoleLogs.showSuccessMessage(`Making new Model : ${modelName}`)
             }
 
@@ -57,9 +66,14 @@ export default class CreateModel {
                     if (fieldName === "") {
                         break;
                     }
+                    if (modelNamesInUse.includes(fieldName)) {
+                        console.log(chalk.red('This name is already used!'))
+                        continue
+                    }
                     newField = await this.makeNewField(appName, modelName, fieldName);
                     fields= [...fields, newField]
                     fieldNames = [...fieldNames, fieldName]
+                    modelNamesInUse = [...modelNamesInUse, fieldName]
                 }
                 catch (_) {
                     return
@@ -91,7 +105,7 @@ export default class CreateModel {
 
             fs.writeFileSync( `${appName}/models.py`, newContent)
 
-            this.generateForm(appName, modelName);
+            this.generateForm(appName, modelName, isNewModel);
 
             ConsoleLogs.showSuccessMessages(["Model updated successfully!", "Run 'dja m migrate' to migrate the changes"])
         }
@@ -151,7 +165,7 @@ export default class CreateModel {
      * ask the user for the field type
      * @return {Promise<string|*|string>} the field type for the code
      */
-    static async askFieldsType(){
+    static async askFieldType(){
         const answer = await inquirer.prompt({
             name: 'field_type',
             type: 'input',
@@ -220,10 +234,10 @@ export default class CreateModel {
                     "ipAddress" + "\t" + "ipAddressGeneric" + "\n\n" +
                     "json" + "\n"
                 ))
-                return this.askFieldsType();
+                return this.askFieldType();
             default:
                 console.log(chalk.red("Invalid field type please retry"))
-                return this.askFieldsType();
+                return this.askFieldType();
         }
     }
 
@@ -235,9 +249,9 @@ export default class CreateModel {
      * @return {Promise<string>} the code to make the field
      */
     static async makeNewField(appName, modelName, fieldName) {
-        let type = await this.askFieldsType();
+        const fieldType = await this.askFieldType()
         let parameters = ""
-        switch (type) {
+        switch (fieldType) {
             case "CharField":
             case "SlugField":
             case "EmailField":
@@ -263,7 +277,7 @@ export default class CreateModel {
         }
         let nullable = await this.askIsNullable()
 
-        return `${fieldName} = models.${type}(${parameters}${parameters.length>0?', ':''}blank=False${nullable?', null=True':''})`
+        return `${fieldName} = models.${fieldType}(${parameters}${parameters.length>0?', ':''}blank=False${nullable?', null=True':''})`
 
     }
 
@@ -494,39 +508,49 @@ export default class CreateModel {
      * generate the form for the model
      * @param appName the app name
      * @param modelName the model name
+     * @param isNewModel if it's creating a new model or not
      */
-    static generateForm(appName, modelName) {
+    static generateForm(appName, modelName, isNewModel) {
+
         let fileContent = fs.readFileSync(`${appName}/models.py`, "utf8");
+        // get the class associated ith the model
         const regexGetClass = new RegExp(`class\\s+${modelName}\\s*\\s*([\\s\\S]*?)(?=\\n\\S|$)\\s*pass`, 'gm');
         let modelContent = fileContent.match(regexGetClass)[0]
-        let allVariables = modelContent.match(/\s*([a-zA-Z]+)\s*=\s*models\.\w+(.*)/g)
-        for (let i = 0; i < allVariables.length; i++) {
-            allVariables[i] = allVariables[i].match(/(\w+)\s*=/)[1];
-        }
+
+        let allVariables = modelContent.match(/(\w+\s*=\s*models\..*)\(/g)
+        let variables = []
 
         let newContent = `class ${modelName}Form(forms.ModelForm):\n`+
             `\tclass Meta:\n`+
             `\t\tmodel = ${modelName}\n`+
             `\t\tfields = [ `;
 
-        allVariables.forEach(name => {
-            newContent += `'${name}'` + ", "
-        })
+        for (let i = 0; i < allVariables.length; i++) {
+            variables = [...variables, {name: allVariables[i].match(/(\w+)\s*=/)[1], type: this.getAttrByType(allVariables[i].match(/models\.(.*)\(/)[1])}] ;
+            newContent += `'${variables[i].name}'` + ", "
+        }
 
         const lastCommaIndex = newContent.lastIndexOf(',');
         if (lastCommaIndex !== -1) {
             newContent = newContent.slice(0, lastCommaIndex) + newContent.slice(lastCommaIndex + 1);
         }
 
-        newContent += ']'
+        newContent += ']\n\n'
+
+        newContent += '\t\twidgets = {\n'
+        for (let i = 0; i < variables.length; i++) {
+            newContent += `\t\t\t'${variables[i].name}': ${variables[i].type},\n`
+        }
+        newContent += '\t\t}\n\tpass\n\n'
 
         let formFileContent = fs.readFileSync(`${appName}/forms.py`, "utf8")
-        if((new RegExp(`from \.models import ${modelName}`)).test(formFileContent)) {
-            let classRegExp = new RegExp(`class ${modelName}Form\\(forms.ModelForm\\):(?:.|\\s)*${modelName}\\s*fields\\s*=\\s*\\[.*\\]`)
-            formFileContent= formFileContent.replace(classRegExp, newContent)
+        if(!isNewModel) {
+            formFileContent = formFileContent.replace(formFileContent.match(regexGetClass)[0], newContent)
+
             fs.writeFileSync(`${appName}/forms.py`, formFileContent)
         }
         else {
+
             formFileContent = `from \.models import ${modelName}\n` + formFileContent +`\n\n${newContent}`
             fs.writeFileSync(`${appName}/forms.py`, formFileContent)
         }
@@ -626,6 +650,11 @@ export default class CreateModel {
         return parameters;
     }
 
+    /**
+     * verify if the user want to create forms html files with it
+     * @param fileCreation if the user passed the ---mf flag or not
+     * @return {Promise<boolean>} if the user want or not the option
+     */
     static async getFileCreation(fileCreation) {
         try {
             if (fileCreation) {
@@ -638,6 +667,10 @@ export default class CreateModel {
         }
     }
 
+    /**
+     * ask the user if he wants to create forms html files
+     * @return {Promise<boolean>} the user choice
+     */
     static async askFileCreation(){
         let res = await inquirer.prompt({
             name: 'choice',
@@ -647,5 +680,82 @@ export default class CreateModel {
         })
 
         return res.choice==="yes"
+    }
+
+    /**
+     * get the form attribute by the current field type of the model
+     * @param type the model type
+     * @return {string} the form type
+     */
+    static getAttrByType(type){
+        switch (type) {
+            case "TextField":
+                return "forms.Textarea(attrs={'class': 'form-control'})"; // For multi-line text
+            case "CharField":
+                return "forms.TextInput(attrs={'class': 'form-control'})"; // For single-line text
+            case "IntegerField":
+                return "forms.NumberInput(attrs={'class': 'form-control'})"; // For integer input
+            case "PositiveIntegerField":
+                return "forms.NumberInput(attrs={'class': 'form-control', 'min': 0})"; // For positive integers
+            case "FloatField":
+                return "forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'})"; // For float input
+            case "DecimalField":
+                return "forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'})"; // For decimal input
+            case "BooleanField":
+                return "forms.CheckboxInput(attrs={'class': 'form-check-input'})"; // For boolean (checkbox)
+            case "DateField":
+                return "forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})"; // For date input
+            case "TimeField":
+                return "forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'})"; // For time input
+            case "DateTimeField":
+                return "forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'})"; // For date and time
+            case "FileField":
+                return "forms.FileInput(attrs={'class': 'form-control'})"; // For file input
+            case "ImageField":
+                return "forms.ClearableFileInput(attrs={'class': 'form-control'})"; // For image input with clear option
+            case "ForeignKey":
+                return "forms.Select(attrs={'class': 'form-control'})"; // For foreign key dropdowns
+            case "OneToOneField":
+                return "forms.Select(attrs={'class': 'form-control'})"; // For one-to-one dropdowns
+            case "ManyToManyField":
+                return "forms.SelectMultiple(attrs={'class': 'form-control'})"; // For many-to-many relationships
+            case "EmailField":
+                return "forms.EmailInput(attrs={'class': 'form-control'})"; // For email input
+            case "URLField":
+                return "forms.URLInput(attrs={'class': 'form-control'})"; // For URL input
+            case "UUIDField":
+                return "forms.TextInput(attrs={'class': 'form-control'})"; // For UUID input (treated as string)
+            case "SlugField":
+                return "forms.TextInput(attrs={'class': 'form-control'})"; // For slug input (text input)
+            case "IPAddressField":
+                return "forms.TextInput(attrs={'class': 'form-control'})"; // For IP address input
+            case "GenericIPAddressField":
+                return "forms.TextInput(attrs={'class': 'form-control'})"; // For generic IP input (IPv4/IPv6)
+            case "JSONField":
+                return "forms.JSONField(widget=forms.Textarea(attrs={'class': 'form-control'}))"; // For JSON input
+            default:
+                return "forms.TextInput(attrs={'class': 'form-control'})"; // Default widget
+        }
+    }
+
+    /**
+     * return all the names of the selected model
+     * @param appName the app name
+     * @param modelName the model name
+     * @return {*[]} an array with all the fields names
+     */
+    static getAllFieldNameOfModel(appName, modelName){
+        let fileContent = fs.readFileSync(`${appName}/models.py`, "utf8");
+        // get the class associated ith the model
+        const regexGetClass = new RegExp(`class\\s+${modelName}\\s*\\s*([\\s\\S]*?)(?=\\n\\S|$)\\s*pass`, 'gm');
+        let modelContent = fileContent.match(regexGetClass)[0]
+
+        let allVariables = modelContent.match(/(\w+\s*=\s*models\..*)\(/g)
+        let variables = []
+
+        for (let i = 0; i < allVariables.length; i++) {
+            variables = [...variables, allVariables[i].match(/(\w+)\s*=/)[1]] ;
+        }
+        return variables
     }
 }
