@@ -27,7 +27,7 @@ export default class CreateUnderApp {
         }
         else {
             viewName = await this.askName();
-            this.createApp(viewName);
+            await this.createApp(viewName);
         }
     }
 
@@ -36,72 +36,80 @@ export default class CreateUnderApp {
      * @param appName the app name
      */
     static createApp(appName) {
-        appName = appName.toLowerCase()
+        return new Promise((resolve, reject) => {
+            appName = appName.toLowerCase();
 
-        let errorStatus = false
-        let spinner = createSpinner(' Creating project').start();
-        let com = spawn(`python`, ['manage.py', 'startapp', `${appName}`], {'shell':'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' }});
+            let errorStatus = false;
+            let spinner = createSpinner('Creating project').start();
+            let com = spawn(`python`, ['manage.py', 'startapp', `${appName}`], { 'shell': 'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' } });
 
-        com.stdout.on("data", data => {
-        });
+            com.stdout.on("data", data => {
+                process.stdout.write(data);
+            });
 
-        com.stderr.on("data", data => {
-            process.stdout.write(data);
-            spinner.error()
-            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Make sure you are in your project directory`])
-            errorStatus = true
-        });
+            com.stderr.on("data", data => {
+                process.stdout.write(data);
+                spinner.error();
+                ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`, `Make sure you are in your project directory`]);
+                errorStatus = true;
+            });
 
-        com.on('error', (error) => {
-            spinner.error()
-            ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`,`Make sure you are in your project directory`])
-            errorStatus = true
-        });
+            com.on('error', (error) => {
+                spinner.error();
+                ConsoleLogs.showErrorMessages([`Could not create an app named ${appName}`, `Make sure you are in your project directory`]);
+                errorStatus = true;
+                reject(error);  // Reject the promise on error
+            });
 
-        com.on("close", code => {
-            try {
-                if (!errorStatus) {
-                    spinner.success({text: ` created !`})
+            com.on("close", code => {
+                try {
+                    if (!errorStatus) {
+                        spinner.success({ text: `created!` });
 
-                    spinner = createSpinner(' Creating urls').start();
-                    this.createUrls(appName)
-                    spinner.success()
+                        spinner = createSpinner('Creating urls').start();
+                        this.createUrls(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Creating views').start();
-                    this.generateBasicView(appName)
-                    spinner.success()
+                        spinner = createSpinner('Creating views').start();
+                        this.generateBasicView(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Creating template directory').start();
-                    this.generateTemplateDirectory(appName)
-                    spinner.success()
+                        spinner = createSpinner('Creating template directory').start();
+                        this.generateTemplateDirectory(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Generating basic view').start();
-                    this.generateBasicView(appName)
-                    spinner.success()
+                        spinner = createSpinner('Generating basic view').start();
+                        this.generateBasicView(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Enabling templates').start();
-                    this.allowTemplates(appName)
-                    spinner.success()
+                        spinner = createSpinner('Enabling templates').start();
+                        this.allowTemplates(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Generating rooting').start();
-                    this.generateRootRouting(appName)
-                    spinner.success()
+                        spinner = createSpinner('Generating rooting').start();
+                        this.generateRootRouting(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Installing the application').start();
-                    this.installingTheApp(appName)
-                    spinner.success()
+                        spinner = createSpinner('Installing the application').start();
+                        this.installingTheApp(appName);
+                        spinner.success();
 
-                    spinner = createSpinner(' Generating BareboneFormsAuth.txt file').start();
-                    this.generateFormFile(appName)
-                    spinner.success()
+                        spinner = createSpinner('Generating BareboneFormsAuth.txt file').start();
+                        this.generateFormFile(appName);
+                        spinner.success();
 
-                    ConsoleLogs.showSuccessMessage(appName + " View generated with success !");
+                        ConsoleLogs.showSuccessMessage(appName + " View generated with success!");
+
+                        resolve();  // Resolve the promise when everything is done
+                    } else {
+                        reject(new Error(`Error occurred while creating app ${appName}`));
+                    }
+                } catch (error) {
+                    spinner.error();
+                    ConsoleLogs.showErrorMessage(`Could not create an app named ${appName} ` + error);
+                    reject(error);  // Reject the promise on exception
                 }
-            }
-            catch (error) {
-                spinner.error()
-                ConsoleLogs.showErrorMessage(`Could not create an app named ${appName} ` + error )
-            }
+            });
         });
     }
 

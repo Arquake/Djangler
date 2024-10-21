@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Commands/file-generator/CreateAuth.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/BareboneFormsAuth.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/BareboneModelAuth.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/BareboneUrlsAuth.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/BareboneViewsAuth.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/Templates/authentication.home.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/Templates/authentication.login.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template-files/auth-template/Templates/authentication.register.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/ComponentGenerator.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/ComponentGenerator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateAuth.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateAuth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/template-files/BareboneUrls.txt" beforeDir="false" afterPath="$PROJECT_DIR$/template-files/BareboneUrls.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/template-files/BareboneViews.txt" beforeDir="false" afterPath="$PROJECT_DIR$/template-files/BareboneViews.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="70571" />
+    <option name="totalTimeSeconds" value="71381" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -100,7 +92,7 @@
       <workItem from="1729173347084" duration="2673000" />
       <workItem from="1729346145859" duration="4000" />
       <workItem from="1729346213503" duration="18502000" />
-      <workItem from="1729516583279" duration="12316000" />
+      <workItem from="1729516583279" duration="13798000" />
     </task>
     <servers />
   </component>

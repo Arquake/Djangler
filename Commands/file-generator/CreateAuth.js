@@ -2,18 +2,21 @@ import CreateUnderApp from "./CreateUnderApp.js";
 import fs from "fs";
 import {dirname} from "../../dirname.js";
 import path from "node:path";
+import ConsoleLogs from "../../console-logs/ConsoleLogs.js";
 
 
 export default class CreateAuth {
 
     static async handleCommand() {
-        //await CreateUnderApp.createApp('authentication');
+        await CreateUnderApp.createApp('authentication');
         this.addAuthToSettings();
         this.makeUrls();
         this.makeForms();
         this.makeModels();
         this.makeViews();
         this.generateTemplates();
+
+        ConsoleLogs.showSuccessMessages(['Authentication created with success!','Run \'dja m migrate\' to migrate the changes'])
     }
 
     /**
