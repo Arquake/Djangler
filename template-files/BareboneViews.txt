@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 def index(request):
     return render(
         request,
-        "index.html",
+        "{%VIEW_NAME%}.index.html",
         {
             'view_name': "{%VIEW_NAME%}_view"
         }

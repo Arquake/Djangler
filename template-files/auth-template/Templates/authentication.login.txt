@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ view_name }} {% endblock %}
+
+{% block content %}
+    <style>
+        .error-message {
+        background-color: #fecaca;
+        color: #721c24;
+        border: 1px solid #721c24;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+    </style>
+    <main style="min-height: 100vh;" class="container">
+
+        {% if messages %}
+            <div class="error-message">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'authentication_login' %}">
+            {% csrf_token %}
+
+            <h2>Login</h2>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+
+            <button type="submit">Connect</button>
+            <p>Don't have an account? <a href="{% url 'authentication_register' %}">Register here!</a></p>
+        </form>
+    </main>
+
+{% endblock %}

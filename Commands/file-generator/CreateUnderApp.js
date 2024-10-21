@@ -36,7 +36,6 @@ export default class CreateUnderApp {
      * @param appName the app name
      */
     static createApp(appName) {
-
         appName = appName.toLowerCase()
 
         let errorStatus = false
@@ -92,7 +91,7 @@ export default class CreateUnderApp {
                     this.installingTheApp(appName)
                     spinner.success()
 
-                    spinner = createSpinner(' Generating forms.py file').start();
+                    spinner = createSpinner(' Generating BareboneFormsAuth.txt file').start();
                     this.generateFormFile(appName)
                     spinner.success()
 
@@ -122,7 +121,7 @@ export default class CreateUnderApp {
 
         if (controllerAnswers.app_name === "") {
             console.log(chalk.red("Please enter a valid name with only letters A -> Z"));
-            return this.askName()
+            return await this.askName()
         }
 
         return controllerAnswers.app_name.toLowerCase();
@@ -134,7 +133,7 @@ export default class CreateUnderApp {
      */
     static createUrls(viewName) {
         const currentDir = process.cwd();
-        const fileContent = this.getUrlsContent();
+        const fileContent = this.getUrlsContent().replaceAll("{%ViewName%}", viewName);
         fs.writeFileSync(`${currentDir}/${viewName}/urls.py`, fileContent);
     }
 
@@ -153,7 +152,7 @@ export default class CreateUnderApp {
      */
     static generateBasicView(viewName) {
         const viewTemplateLink = path.join(dirname, './template-files/BareboneViews.txt');
-        const viewContent = fs.readFileSync(viewTemplateLink, 'utf8').replace("{%VIEW_NAME%}", viewName);
+        const viewContent = fs.readFileSync(viewTemplateLink, 'utf8').replaceAll("{%VIEW_NAME%}", viewName);
         fs.writeFileSync(`${process.cwd()}/${viewName}/views.py`, viewContent);
     }
 
@@ -165,7 +164,7 @@ export default class CreateUnderApp {
         fs.mkdirSync(`${process.cwd()}/${viewName}/Templates`);
         const templateTemplateLink = path.join(dirname, './template-files/BareboneTemplate.txt');
         const templateTemplate = fs.readFileSync(templateTemplateLink, 'utf8');
-        fs.writeFileSync(`${process.cwd()}/${viewName}/Templates/index.html`, templateTemplate)
+        fs.writeFileSync(`${process.cwd()}/${viewName}/Templates/${viewName}.index.html`, templateTemplate)
     }
 
     /**
@@ -213,7 +212,7 @@ export default class CreateUnderApp {
     }
 
     /**
-     * generate the forms.py file for the app
+     * generate the BareboneFormsAuth.txt file for the app
      * @param appName the app name
      */
     static generateFormFile(appName) {

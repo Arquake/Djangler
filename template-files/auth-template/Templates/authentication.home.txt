@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ view_name }} {% endblock %}
+
+{% block content %}
+
+    <main style="min-height: 100vh;" class="container">
+        <h1>Authenticated!</h1>
+    </main>
+
+{% endblock %}

@@ -3,6 +3,7 @@ import CreateUnderApp from "./file-generator/CreateUnderApp.js";
 import CreateModel from "./file-generator/CreateModel.js";
 import ConsoleLogs from "../console-logs/ConsoleLogs.js";
 import inquirer from "inquirer";
+import CreateAuth from "./file-generator/CreateAuth.js";
 
 export default class ComponentGenerator {
 
@@ -20,7 +21,7 @@ export default class ComponentGenerator {
                 name: 'type',
                 type: 'list',
                 message: 'What do you want to create?',
-                choices: ["application","model","view"]
+                choices: ["application","model","view","auth"]
             })
 
             let choiceAbreviation = ""
@@ -34,6 +35,9 @@ export default class ComponentGenerator {
                     break;
                 case "view":
                     choiceAbreviation = "v"
+                    break;
+                case "auth":
+                    choiceAbreviation = "auth"
                     break;
                 default:
                     break;
@@ -60,6 +64,9 @@ export default class ComponentGenerator {
             // Handle model creation commands
             case 'm':
                 await CreateModel.handleCommand(command.slice(1));
+                break;
+            case "auth":
+                await CreateAuth.handleCommand()
                 break;
             default:
                 ConsoleLogs.showErrorMessages(["The command don't exist", "Run 'dja help' to get help"])

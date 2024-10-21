@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ view_name }} {% endblock %}
+
+{% block content %}
+
+    <main style="min-height: 100vh;" class="container">
+        <form method="post" action="{% url 'authentication_register' %}">
+            {% csrf_token %}
+            <h2>Register</h2>
+            {{ form }}
+            <button type="submit">Register</button>
+            <p>Already have an account? <a href="{% url 'authentication_login' %}">Login here!</a></p>
+        </form>
+    </main>
+
+{% endblock %}

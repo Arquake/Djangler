@@ -1,0 +1,20 @@
+from .models import User
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
+class CustomUserCreationForm(UserCreationForm):
+	password1 = forms.CharField(
+		label="Password",
+		strip=False,
+		widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'})
+	)
+	password2 = forms.CharField(
+		label="Password Confirmation",
+		strip=False,
+		widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'})
+	)
+	class Meta(UserCreationForm.Meta):
+		model = User
+		fields = UserCreationForm.Meta.fields + ('email', 'password1', 'password2')
+	pass
+
