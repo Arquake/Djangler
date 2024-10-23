@@ -15,4 +15,8 @@ export default class ConsoleType {
             throw new Error(`Unsupported platform: ${platform}`);
         }
     }
+
+    static getPythonType() {
+
+    }
 }

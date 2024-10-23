@@ -11,7 +11,7 @@ export default class Serve {
      */
     static handleCommand(command) {
         if (command.length === 0) {
-            let com = spawn(`python`, ['manage.py', 'runserver'], {'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' }});
+            let com = spawn(`python3`, ['manage.py', 'runserver'], {'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' }});
 
             com.stdout.on("data", data => {
                 process.stdout.write(data);
