@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import {dirname} from "../dirname.js";
 import chalk from "chalk";
+import ConsoleType from "../Components/ConsoleType.js";
 
 export default class CreateApp {
 
@@ -24,7 +25,7 @@ export default class CreateApp {
             }
             const name = await this.getName(command)
             let spinner = createSpinner(' Creating project').start();
-            const com = spawn(`django-admin startproject ${name}`, {'shell':'powershell.exe'});
+            const com = spawn(`django-admin startproject ${name}`, {'shell':ConsoleType.getShell()});
 
 
             com.stdout.on("data", data => {

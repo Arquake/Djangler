@@ -7,6 +7,7 @@ import inquirer from "inquirer";
 import InvalidInputError from "../../Errors/InvalidInputError.js";
 import {createSpinner} from "nanospinner";
 import chalk from "chalk";
+import ConsoleType from "../../Components/ConsoleType.js";
 
 export default class CreateUnderApp {
 
@@ -41,7 +42,7 @@ export default class CreateUnderApp {
 
             let errorStatus = false;
             let spinner = createSpinner('Creating project').start();
-            let com = spawn(`python`, ['manage.py', 'startapp', `${appName}`], { 'shell': 'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' } });
+            let com = spawn(`python`, ['manage.py', 'startapp', `${appName}`], { 'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' } });
 
             com.stdout.on("data", data => {
                 process.stdout.write(data);

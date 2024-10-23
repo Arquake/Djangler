@@ -1,6 +1,7 @@
 import {spawn} from "child_process";
 import ConsoleLogs from "../console-logs/ConsoleLogs.js";
 import chalk from "chalk";
+import ConsoleType from "../Components/ConsoleType.js";
 
 export default class Serve {
 
@@ -10,7 +11,7 @@ export default class Serve {
      */
     static handleCommand(command) {
         if (command.length === 0) {
-            let com = spawn(`python`, ['manage.py', 'runserver'], {'shell':'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' }});
+            let com = spawn(`python`, ['manage.py', 'runserver'], {'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' }});
 
             com.stdout.on("data", data => {
                 process.stdout.write(data);

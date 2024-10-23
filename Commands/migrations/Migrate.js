@@ -1,5 +1,6 @@
 import {spawn} from "child_process";
 import ConsoleLogs from "../../console-logs/ConsoleLogs.js";
+import ConsoleType from "../../Components/ConsoleType.js";
 
 export default class Migrate {
 
@@ -9,7 +10,7 @@ export default class Migrate {
     static migrate(){
         let err = false;
 
-        let com = spawn(`python`, ['manage.py', 'migrate'], {'shell':'powershell.exe', env: { ...process.env, PYTHONUNBUFFERED: '1' }});
+        let com = spawn(`python`, ['manage.py', 'migrate'], {'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' }});
 
         com.stdout.on("data", data => {
             process.stdout.write(data);
