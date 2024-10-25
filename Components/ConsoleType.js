@@ -17,6 +17,13 @@ export default class ConsoleType {
     }
 
     static getPythonType() {
-
+        const platform = os.platform();
+        if (platform === 'win32') {
+            return 'python';
+        } else if (platform === 'linux' || platform === 'darwin') {
+            return 'python3';
+        } else {
+            throw new Error(`Unsupported platform: ${platform}`);
+        }
     }
 }

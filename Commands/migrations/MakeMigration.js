@@ -11,7 +11,7 @@ export default class MakeMigration {
     static makeMigration() {
         let err = false;
 
-        let com = spawn(`python3`, ['manage.py', 'makemigrations'], {'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' }});
+        let com = spawn(ConsoleType.getPythonType(), ['manage.py', 'makemigrations'], {'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' }});
 
         com.stdout.on("data", data => {
             process.stdout.write(data);

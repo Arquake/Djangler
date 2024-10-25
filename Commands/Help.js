@@ -13,7 +13,7 @@ const commandList = {
     g: 'g {type} : generate a new component\n' +
         '\t{type} :\n' +
         '\ta : generate a new app\n' +
-        '\t\t-app_name : The application name\n' +
+        '\t\t--app_name : The application name\n' +
         '\tv : generate a new view\n' +
         '\t\t-app_name : The application in which you want to create the view\n' +
         '\t\t--view_name : The view name to create\n' +

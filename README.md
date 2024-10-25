@@ -19,7 +19,7 @@
     &nbsp;&nbsp;
     <img src="https://img.shields.io/badge/Made%20with-Node js-1f425f.svg">
     &nbsp;&nbsp;
-    <img src="https://img.shields.io/badge/version-1.4.3-blue.svg">
+    <img src="https://img.shields.io/badge/version-1.4.4-blue.svg">
 </div>
 
 Djangler is a CLI made for django to extend the base CLI

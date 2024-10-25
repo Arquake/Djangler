@@ -42,7 +42,7 @@ export default class CreateUnderApp {
 
             let errorStatus = false;
             let spinner = createSpinner('Creating project').start();
-            let com = spawn(`python3`, ['manage.py', 'startapp', `${appName}`], { 'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' } });
+            let com = spawn(ConsoleType.getPythonType(), ['manage.py', 'startapp', `${appName}`], { 'shell': ConsoleType.getShell(), env: { ...process.env, PYTHONUNBUFFERED: '1' } });
 
             com.stdout.on("data", data => {
                 process.stdout.write(data);
