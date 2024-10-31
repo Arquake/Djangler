@@ -7,13 +7,8 @@
     <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Commands/Help.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/Help.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/Serve.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/Serve.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/migrations/MakeMigration.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/migrations/MakeMigration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/migrations/Migrate.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/migrations/Migrate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/ConsoleType.js" beforeDir="false" afterPath="$PROJECT_DIR$/Components/ConsoleType.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="74485" />
+    <option name="totalTimeSeconds" value="75594" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -43,21 +38,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Nicolas/OneDrive/Documents/perso/Djangler",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.1.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Desktop/projects/Djangler&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.1.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Admin\Desktop\projects\Djangler\template-files\auth-template" />
@@ -70,7 +65,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13" />
       </set>
     </attachedChunks>
   </component>
@@ -102,6 +97,9 @@
       <workItem from="1729587019212" duration="591000" />
       <workItem from="1729715635538" duration="646000" />
       <workItem from="1729865504475" duration="1925000" />
+      <workItem from="1730304480380" duration="40000" />
+      <workItem from="1730313130736" duration="1723000" />
+      <workItem from="1730368273060" duration="656000" />
     </task>
     <servers />
   </component>

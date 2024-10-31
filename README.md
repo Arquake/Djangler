@@ -19,36 +19,16 @@
     &nbsp;&nbsp;
     <img src="https://img.shields.io/badge/Made%20with-Node js-1f425f.svg">
     &nbsp;&nbsp;
-    <img src="https://img.shields.io/badge/version-1.4.4-blue.svg">
+    <img src="https://img.shields.io/badge/version-1.4.5-blue.svg">
 </div>
 
 Djangler is a CLI made for django to extend the base CLI
 
 
-## Install Django
-run `python -m pip install Django`
+## Installation guide
 
+Go to [the official website](https://djangler.veras.fr/installation) 
 
-# Installation using zip code
+## Help command
 
-### Install all dependencies
-Go into Djangler's folder and run
-``npm install``
-
-### Link the CLI
-Into the Djangler folder and run
-``npm link``
-
-## Djangler is now linked !
-
-# Using npm
-
-### Installing djangler with npm
-
-Install djangler globally
-
-`npm install -g djangler`
-
-## Run commands
-
-Help command ``dja help``
+Run `dja help`

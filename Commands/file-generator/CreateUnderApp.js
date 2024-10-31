@@ -18,7 +18,7 @@ export default class CreateUnderApp {
     static async handleCommand(command) {
         let viewName = "";
         if (command.length > 0) {
-            if ((/--[a-zA-Z]+/g).test(command[0])) {
+            if ((/--[a-zA-Z_]+/g).test(command[0])) {
                 viewName = command[0].replace("--", "");
                 this.createApp(viewName);
             }
@@ -128,7 +128,7 @@ export default class CreateUnderApp {
             },
         })
 
-        if (controllerAnswers.app_name === "") {
+        if (!(/^[a-zA-Z_]+$/g).test(controllerAnswers.app_name)) {
             console.log(chalk.red("Please enter a valid name with only letters A -> Z"));
             return await this.askName()
         }

@@ -20,7 +20,8 @@ const commandList = {
         '\tm : generate a new model\n' +
         '\t\t-app_name : The application in which you want to modify or create models\n' +
         '\t\t--model_name : The model name to create or update\n' +
-        '\t\t---mf : If it has to create forms and routing for the model',
+        '\t\t---mf : If it has to create forms and routing for the model\n'+
+        '\tauth : generate an authentication component',
     m: 'm : migrations commands\n' +
         '\tmigrate : make a migration for the project\n' +
         '\tapply : apply migrations to the database'
