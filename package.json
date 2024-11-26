@@ -16,7 +16,7 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "fs": "^0.0.1-security",
-    "inquirer": "^11.1.0",
-    "nanospinner": "^1.1.0"
+    "inquirer": "^12.1.0",
+    "nanospinner": "^1.2.0"
   }
 }
