@@ -223,15 +223,15 @@ export default class CreateModel {
             case "help":
                 console.log(chalk.green(
                     "Available types : \n" +
-                    "string" + "\t\t" + "text" + "\n\n" +
-                    "int" + "\t\t" + "posint" + "\t\t" + "float" + "\t\t" + "decimal" + "\n\n" +
-                    "boolean" + "\n\n" +
-                    "date" + "\t\t" + "time" + "\t\t" + "dateTime" + "\n\n" +
-                    "file" + "\t\t" + "image" + "\n\n" +
-                    "manyToOne" + "\t" + "oneToOne" + "\t" + "manyToMany" + "\n\n" +
-                    "email" + "\t\t" + "url" + "\n\n" +
-                    "uuid" + "\t\t" + "slug" + "\n\n" +
-                    "ipAddress" + "\t" + "ipAddressGeneric" + "\n\n" +
+                    "string" + "\t\t" + "text" + "\n" +
+                    "int" + "\t\t" + "posint" + "\t\t" + "float" + "\t\t" + "decimal" + "\n" +
+                    "boolean" + "\n" +
+                    "date" + "\t\t" + "time" + "\t\t" + "dateTime" + "\n" +
+                    "file" + "\t\t" + "image" + "\n" +
+                    "manyToOne" + "\t" + "oneToOne" + "\t" + "manyToMany" + "\n" +
+                    "email" + "\t\t" + "url" + "\n" +
+                    "uuid" + "\t\t" + "slug" + "\n" +
+                    "ipAddress" + "\t" + "ipAddressGeneric" + "\n" +
                     "json" + "\n"
                 ))
                 return this.askFieldType();
@@ -263,14 +263,14 @@ export default class CreateModel {
                 break;
             case "FileField":
             case "ImageField":
-                parameters = `upload_to='${appName}/${modelName}/${name}'`;
+                parameters = `upload_to='${appName}/${modelName}'`;
                 break;
             case "ForeignKey":
             case "OneToOneField":
-                parameters = await this.makeManyToField(appName, modelName, name);
+                parameters = await this.makeManyToField(appName, modelName, fieldName);
                 break;
             case "ManyToManyField":
-                parameters = await this.makeOneToOne(appName, modelName, name);
+                parameters = await this.makeOneToOne(appName, modelName, fieldName);
                 break;
             default:
                 break;

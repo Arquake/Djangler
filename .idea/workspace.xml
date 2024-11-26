@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/Help.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/Help.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/file-generator/CreateUnderApp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-    </list>
+    <list default="true" id="203d834d-7dfc-4d27-9038-0fdd0768161d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,7 +59,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
       </set>
     </attachedChunks>
   </component>
@@ -100,6 +94,7 @@
       <workItem from="1730304480380" duration="40000" />
       <workItem from="1730313130736" duration="1723000" />
       <workItem from="1730368273060" duration="656000" />
+      <workItem from="1732605061368" duration="5000" />
     </task>
     <servers />
   </component>
