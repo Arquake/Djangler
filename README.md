@@ -9,7 +9,7 @@
     &nbsp;&nbsp;
     <img src="https://img.shields.io/badge/bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white">
     &nbsp;&nbsp;
-    <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
+    <img src="https://img.shields.io/badge/Maintained%3F-no-red.svg">
     &nbsp;&nbsp;
     <img src="https://img.shields.io/github/license/Arquake/Djangler.svg">
     &nbsp;&nbsp;
